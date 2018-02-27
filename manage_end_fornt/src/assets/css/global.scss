@@ -1,0 +1,19 @@
+
+:global{
+  body{
+    background: #f0f2f5 !important;
+  }
+  ul,ol{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .app-user-container{
+    //margin: 24px 16px;
+    //padding: 24px;
+    overflow: auto;
+    background: rgb(255, 255, 255);
+    min-height: 280px;
+    //border-radius: 6px;
+  }
+}

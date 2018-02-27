@@ -2,10 +2,11 @@
 build/
 .idea/
 .gradle/
-/bin/
+bin/
 .classpath
 .project
-/out
-/log
+out/
+log/
 cccc/
-/resources
+dist/
+resources/
