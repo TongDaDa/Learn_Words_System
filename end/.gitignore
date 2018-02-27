@@ -1,0 +1,11 @@
+.idea/encodings.xml
+build/
+.idea/
+.gradle/
+/bin/
+.classpath
+.project
+/out
+/log
+cccc/
+/resources
