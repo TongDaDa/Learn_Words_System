@@ -17,6 +17,15 @@ public class NewWordManage {
     private String root;
     private Date createTime;
     private String note;
+    private String translated;
+
+    public String getTranslated() {
+        return translated;
+    }
+
+    public void setTranslated(String translated) {
+        this.translated = translated;
+    }
 
     public String getWord() {
         return word;

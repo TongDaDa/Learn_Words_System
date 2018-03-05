@@ -26,7 +26,7 @@ public class NewWordManageService {
     @Autowired
     SentenceManageRepository sentenceManageRepository;
 
-    public void save(Long id,String word,String root,String example,String note){
+    public void save(Long id,String word,String root,String example,String translated, String note){
         NewWordManage newWordManage;
         if (word == null) {
             throw new MyException(ErrorCode.PARAM_ERROR);
@@ -45,11 +45,11 @@ public class NewWordManageService {
         Byte type = 1;
         for (int i = 0; i < exampleList.size(); i++) {
             JSONObject jsonObject = exampleList.getJSONObject(i);
-            String englishWord = jsonObject.getString("englishWord");
-            String translated = jsonObject.getString("translated");
+            String sentence = jsonObject.getString("englishWord");
+            String translated_sentence = jsonObject.getString("translated");
             SentenceManage sentenceManage = new SentenceManage();
-            sentenceManage.setEnglishWord(englishWord);
-            sentenceManage.setTranslatedWord(translated);
+            sentenceManage.setSentence(sentence);
+            sentenceManage.setTranslated(translated_sentence);
             sentenceManage.setType(type);
             sentenceManageRepository.save(sentenceManage);
         }

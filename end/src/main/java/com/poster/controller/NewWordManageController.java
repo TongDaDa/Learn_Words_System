@@ -25,13 +25,14 @@ public class NewWordManageController {
     @RequestMapping(value = "save", method = RequestMethod.POST)
     public NewWordManageResponse save(@ApiParam(required = true, value = "主键", name = "id") @RequestParam(required = false) Long id,
                                      @ApiParam(required = true, value = "单词", name = "word") @RequestParam String word,
+                                      @ApiParam(required = true, value = "译文", name = "translated") @RequestParam String translated,
                                      @ApiParam(required = true, value = "属于的词根", name = "root") @RequestParam(required = false) String root,
                                      @ApiParam(required = true, value = "单词用例", name = "example") @RequestParam(required = false) String example,
                                      @ApiParam(required = true, value = "单词备注", name = "note") @RequestParam(required = false) String note ) throws MyException {
         NewWordManageResponse rd = new NewWordManageResponse();
         ErrorCode result = ErrorCode.OK;
         try {
-            newWordManageService.save(id,word,root,example,note);
+            newWordManageService.save(id,word,root,example,translated,note);
         } catch (MyException e) {
             result = e.getErrorCode();
             logger.error("保存账户出错" + e, e);
