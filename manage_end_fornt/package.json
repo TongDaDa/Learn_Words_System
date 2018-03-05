@@ -1,11 +1,12 @@
 {
-  "name": "czbpc",
-  "version": "1.1.9",
-  "description": "aaaa",
+  "name": "LearnWordSystem",
+  "version": "1.0.0",
+  "description": "量身打造的,定制式的英语学习系统",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=DEVELOPMENT node build/server",
-    "build": "cross-env NODE_ENV=PRODUCTION node build/webpack.config.pro.js"
+    "build": "cross-env NODE_ENV=PRODUCTION node build/webpack.config.pro.js",
+    "packager-linux": "sudo electron-packager ./dist lws --mas --out ./LearnWordSystem --version 1.1.0 --overwrite --icon=./dist/static/img/icon.icns"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.1",
@@ -20,6 +21,8 @@
     "cross-env": "^5.0.1",
     "css-loader": "^0.28.4",
     "css-split-webpack-plugin": "^0.2.1",
+    "electron": "^1.8.2",
+    "electron-packager": "^11.1.0",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.11.2",
     "history": "^4.4.0",
@@ -56,11 +59,17 @@
     "redux-saga": "^0.16.0",
     "store": "^2.0.12",
     "webpack": "^3.0.0",
-    "webpack-chunk-hash": "^0.4.0"
-  },
+    "webpack-chunk-hash": "^0.4.0",
+    "eslint": "^4.14.0",
+    "eslint-config-airbnb": "^16.0.0",
+    "eslint-plugin-babel": "^4.0.0",
+    "eslint-plugin-compat": "^2.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-markdown": "^1.0.0-beta.6",
+    "eslint-plugin-react": "^7.0.1"
+  }
   "theme": {
     "primary-color": "#b67233",
-    "layout-header-background": "#dcdcdc",
-    "layout-trigger-background":"#b2b2b2"
+    "layout-header-background,
   }
-}

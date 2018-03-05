@@ -1,0 +1,23 @@
+{
+  "name": "lws",
+  "version": "1.0.0",
+  "description": "[There english version of README.](http://www.ppp.com)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "issus": "node ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TongDaDa/Word-learning-system.git"
+  },
+  "keywords": [
+    "定制式英语学习系统，程序员专属"
+  ],
+  "author": "aflyingpig",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TongDaDa/Word-learning-system/issues"
+  },
+  "homepage": "https://github.com/TongDaDa/Word-learning-system#readme"
+}

@@ -113,12 +113,16 @@ export default class ManageWord extends Component {
     }
 
     forms = [{
-        label: '单词',
-        field: 'word',
-        rules:[],
-    },{
         label: '词根',
         field: 'root',
+        rules:[],
+    },{
+        label: '汉意',
+        field: 'root',
+        rules:[],
+    },{
+        label: '备注',
+        field: 'note',
         rules:[],
     }]
 

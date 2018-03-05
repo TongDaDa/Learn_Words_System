@@ -1,15 +1,32 @@
 ﻿const menuData = [{
-    name: '基础档案',
+    name: '基础学习',
     icon: 'dashboard',
     path: '/base',
     children: [{
         name: '生词管理',
         path: 'manage_word',
     }, {
+        name: '词根管理',
+        path: 'manage_root',
+    }, {
         name: '复习计划管理',
         path: 'kind',
     }, {
         name: '文章管理',
+        path: 'workplace'
+    }],
+},{
+    name: "复习计划",
+    icon: 'dashboard',
+    path: '/plan',
+    children: [{
+        name: '文章阅读',
+        path: 'read_essay',
+    }, {
+        name: '词根',
+        path: 'root',
+    }, {
+        name: '单词',
         path: 'workplace'
     }],
 },{

@@ -8,13 +8,16 @@ public enum ErrorCode {
 
     OK("0", "成功"),
     PARAM_ERROR("9999", "参数错误"),
+    ALREDAY_HAVE("9010", "已经存在"),
+    NOT_HAVE("9002", "不存在"),
+
     HAS_USED_ERROR("10000", "已经使用"),
     HAS_NO_RECORD_ERROR("10001", "记录不存在"),
     USER_NOT_EXIST("20001", "用户不存在"),
     USER_PWD_ERROR("20002", "用户密码不对"),
     EXTERNAL_USED("8004", "外部应用被使用"),
     TOKEN_FAILURE("9001", "token失效"),
-    APPID_ERROR("9002", "APPID不存在"),
+
     CODE_ERROR("9003", "CODE不存在"),
     CODE_TIMEOUT("9004", "CODE失效"),
     HAS_BIND("9005", "已经绑定"),
@@ -22,7 +25,7 @@ public enum ErrorCode {
     NO_PERMISSION("9007", "没有此权限"),
     REQUEST_INVALID("9008", "请求失效"),
     NO_PERMISSIONS("9009", "未查询到权限"),
-    CON_FLICT("9010", "已经存在"),
+
     DATE_ERROR("9011", "日期格式非法"),
     GET_TOKEN_ERROR("30000", "获取token失败"),
     ERROR("500", "服务器错误"),

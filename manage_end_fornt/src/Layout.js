@@ -4,14 +4,8 @@ import routes from './routes/index'
 import {getMenuData} from './common/menu';
 import NotFound from './routes/Exception/404';
 import {Link,Switch,Route} from 'react-router-dom';
-
-import { reqGetAuthCode, reqGetUserInfo } from 'services/getUserInfoApi';
-
-// import script from 'script';
-
 const {SubMenu} = Menu;
 const {Sider, Content} = Layout;
-// const isDev = process.env.NODE_ENV === '';
 
 const getIcon = (icon) => {
     return <Icon type={icon} />;
@@ -29,40 +23,6 @@ export default class Lay extends Component {
             collapsed: true,
             openKeys: this.getDefaultCollapsedSubMenus(this.props),
         };
-    }
-
-    componentWillMount(){
-
-        /*reqGetAuthCode().then((res)=>{
-            if(res.errorCode == 0){
-                let nonceStr = res.sign.nonceStr;
-                let timeStamp = res.sign.timestamp;
-                let signature = res.sign.sign;
-                let appid = res.sign.appid;
-                dd.config({
-                    enId:2,
-                    sercretid:'1234',
-                    nonceStr:nonceStr,
-                    timeStamp:timeStamp,
-                    signature:signature
-                });
-                dd.ready(
-                    dd.requestAuthCode({
-                        corpId:2,
-                        onSuccess:function (res) {
-                            reqGetUserInfo({
-                                appid: appid,
-                                code: res.code,
-                            }).then((res)=>{});
-                        },
-
-                        onFail:function (res) {
-                            console.log(res+'fail')
-                        }
-                    })
-                );
-            }
-        });*/
     }
 
     getDefaultCollapsedSubMenus(props) {
@@ -180,24 +140,24 @@ export default class Lay extends Component {
         }
 
         return <Layout style={{height: '100vh'}}>
-            {/*<Sider*/}
-                {/*collapsible*/}
-                {/*breakpoint="md"*/}
-                {/*collapsed={this.state.collapsed}*/}
-                {/*onCollapse={this.toggle}*/}
-                {/*width={256}*/}
-            {/*>*/}
-                {/*<Menu*/}
-                    {/*key="Menu"*/}
-                    {/*mode="inline"*/}
-                    {/*onOpenChange={this.handleOpenChange}*/}
-                    {/*openKeys={openKeys}*/}
-                    {/*selectedKeys={selectedKeys}*/}
-                    {/*style={{padding: '16px 0', width: '100%'}}*/}
-                {/*>*/}
-                    {/*{ this.getNavMenuItems(this.menus) }*/}
-                {/*</Menu>*/}
-            {/*</Sider>*/}
+            <Sider
+                collapsible
+                breakpoint="md"
+                collapsed={this.state.collapsed}
+                onCollapse={this.toggle}
+                width={256}
+            >
+                <Menu
+                    key="Menu"
+                    mode="inline"
+                    onOpenChange={this.handleOpenChange}
+                    openKeys={openKeys}
+                    selectedKeys={selectedKeys}
+                    style={{padding: '16px 0', width: '100%'}}
+                >
+                    { this.getNavMenuItems(this.menus) }
+                </Menu>
+            </Sider>
             <Layout>
                 <Content className="app-user-container">
                     <Switch>
