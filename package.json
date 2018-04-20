@@ -1,27 +1,76 @@
 {
-  "name": "lws",
+  "name": "LearnWordSystem",
   "version": "1.0.0",
-  "description": "[There english version of README.](http://www.ppp.com)",
+  "description": "量身打造的,定制式的英语学习系统",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "issus": "node ./"
+    "start": "cross-env NODE_ENV=DEVELOPMENT node build/server",
+    "build": "cross-env NODE_ENV=PRODUCTION node build/webpack.config.pro.js",
+    "packager-linux": "sudo electron-packager ./dist lws --mas --out ./LearnWordSystem --version 1.1.0 --overwrite --icon=./dist/static/img/icon.icns"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TongDaDa/Word-learning-system.git"
-  },
-  "keywords": [
-    "定制式英语学习系统，程序员专属"
-  ],
-  "author": "aflyingpig",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/TongDaDa/Word-learning-system/issues"
-  },
-  "homepage": "https://github.com/TongDaDa/Word-learning-system#readme",
   "devDependencies": {
+    "autoprefixer": "^7.1.1",
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-import": "^1.4.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "copy-webpack-plugin": "^4.5.1",
+    "cross-env": "^5.0.1",
+    "css-loader": "^0.28.4",
+    "css-split-webpack-plugin": "^0.2.1",
+    "electron": "^1.8.2",
+    "electron-packager": "^11.1.0",
+    "extract-text-webpack-plugin": "^2.1.2",
+    "file-loader": "^0.11.2",
+    "history": "^4.4.0",
+    "html-webpack-plugin": "^2.30.1",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
+    "postcss-loader": "^2.0.6",
+    "rimraf": "^2.6.2",
+    "style-loader": "^0.18.2",
+    "url-loader": "^0.5.9",
+    "webpack-dev-server": "^2.5.0"
+  },
+  "dependencies": {
+    "antd": "^3.1.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "echarts-for-react": "^1.4.4",
+    "eslint": "^4.14.0",
+    "eslint-config-airbnb": "^16.0.0",
+    "eslint-plugin-babel": "^4.0.0",
+    "eslint-plugin-compat": "^2.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-markdown": "^1.0.0-beta.6",
+    "eslint-plugin-react": "^7.0.1",
+    "graphql.js": "^0.4.18",
+    "history": "^4.6.3",
+    "immutable": "^3.8.1",
+    "js-cookie": "^2.1.4",
+    "lodash": "^4.17.4",
+    "moment": "^2.20.1",
     "nprogress": "^0.2.0",
-    "rxjs": "^6.0.0-alpha.3"
+    "postcss": "^6.0.9",
+    "postcss-cssnext": "^3.0.2",
+    "precss": "^2.0.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.1.2",
+    "react-router-dom": "^4.1.2",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0",
+    "rxjs": "^6.0.0-alpha.3",
+    "store": "^2.0.12",
+    "webpack": "^3.0.0",
+    "webpack-chunk-hash": "^0.4.0"
+  },
+  "theme": {
+    "primary-color": "#9c00fc"
   }
 }
