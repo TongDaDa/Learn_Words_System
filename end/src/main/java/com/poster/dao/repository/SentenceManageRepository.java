@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 
 public interface SentenceManageRepository extends JpaRepository<SentenceManage, Long>, JpaSpecificationExecutor<SentenceManage> {
-    SentenceManage findByEnglishWord(String root);
+    SentenceManage findBysentence(String root);
     List<SentenceManage> findByType(Byte type);
 }

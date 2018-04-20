@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Table, Menu,message,Modal,Select } from "antd"
-import {reqWordList,reqSaveWord,reqDelword,reqGetWordModal} from 'services/api'
+import {reqRootList,reaSaveRoot,reqDelRoot,reqGetRootModal} from 'services/api'
 import style from './style.scss';
-import moment from "moment";
 import {addRowsKey,omit,splitObject} from 'utils/util'
 const FormItem = Form.Item;
 const Textarea = Input.TextArea;
@@ -36,28 +35,15 @@ export default class ManageWord extends Component {
 
     columns = [
         {
-            title: 'word',
-            dataIndex: 'word',
-            key: 'word',
-            fixed:'left',
-            width:100,
-        },{
-            title: 'create Time',
-            dataIndex: 'createTime',
-            key: 'createTime',
-            render: i => moment(i).format("YYYY-MM-DD")
-        },{
             title: 'root',
             dataIndex: 'root',
             key: 'root',
+            fixed:'left',
+            width:100,
         },{
-            title: 'example',
-            dataIndex: 'example',
-            key: 'example',
-        },{
-            title: 'note',
-            dataIndex: 'note',
-            key: 'note',
+            title: 'translated',
+            dataIndex: 'translated',
+            key: 'translated'
         },{
             title: 'handle',
             dataIndex: 'handle',
@@ -84,32 +70,26 @@ export default class ManageWord extends Component {
             curModalOpenText:"编辑词汇",
             currentHandleId:id,
         })
-        reqGetWordModal(id).then((res)=>{
-            console.log(res);
+        reqGetRootModal(id).then((res)=>{
             const [left] = splitObject(res.wordModal,["note","example","word","root"])
-            console.log(left);
             this.props.form.setFieldsValue(this.handleFieldsPrefix(left,false))
         })
     }
 
-    reqTableList = (pageNum=1,word="",root="") => {
-     this.setState({  tableLoading:true  });
-     if (this.state.isCarryHeaderForm) {
-        word = this.props.form.getFieldsValue().word;
-        root = this.props.form.getFieldsValue().root;
-     }
-     return reqWordList({
-         pageNum,
-         pageSize:10,
-         word,root
-     }).then((res)=>{
-        if (res.errorCode === "0") {
-            this.setState({
-                tableData: addRowsKey(res.wordList || []),
-                tableLoading:false
-            })
-        }
-     })
+    reqTableList = (pageNum=1) => {
+         this.setState({ tableLoading:true });
+         return reqRootList({
+             pageNum,
+             pageSize:10
+         }).then((res)=>{
+             console.log(res);
+             if (res.errorCode === "0") {
+                this.setState({
+                    tableData: addRowsKey(res.wordList || []),
+                    tableLoading:false
+                })
+            }
+         })
     }
 
     forms = [{
@@ -155,7 +135,7 @@ export default class ManageWord extends Component {
             visibleModal:false,
             curModalOpenText:"",
         })
-    } 
+    }
 
     handleFieldsPrefix = (values,type)=>{
         if (type) {
@@ -197,6 +177,26 @@ export default class ManageWord extends Component {
             visibleModal:true,
         })
     }
+
+    forms = [{
+        label: '单词',
+        field: 'word',
+        rules:[],
+    },{
+        label: '词根',
+        field: 'root',
+        rules:[],
+    }]
+
+    modalForms = [{
+        label: '词根',
+        field: 'modal_root',
+        rules:[],
+    },{
+        label: '翻译',
+        field: 'modal_translated',
+        rules:[{required:true,message:"请填写"}],
+    }]
 
     render() {
         const {tableLoading,tableData,paginationOption,visibleModal,curModalOpenText} = this.state;
@@ -245,37 +245,18 @@ export default class ManageWord extends Component {
                 >
                         <Form layout="inline">
                             {
-                                    this.modalForms.map((formItem,key)=>
-                                      <FormItem label={formItem.label} key={formItem.field}>
-                                          {
-                                              getFieldDecorator(formItem.field,{
-                                                  rules: formItem.rules,
-                                              })(
-                                                  <Input size="default" placeholder={`请输入${formItem.label}`} maxLength="100" />
-                                              )
-                                          }
-                                      </FormItem>
-                                    )
+                                this.modalForms.map((formItem,key)=>
+                                    <FormItem label={formItem.label} key={formItem.field}>
+                                        {
+                                            getFieldDecorator(formItem.field,{
+                                                rules: formItem.rules,
+                                            })(
+                                                <Input size="default" placeholder={`请输入${formItem.label}`} maxLength="100" />
+                                            )
+                                        }
+                                    </FormItem>
+                                )
                             }
-                            <div style={{marginTop:10}}>
-                                <FormItem label="备注" key="modal_note">
-                                    {
-                                        getFieldDecorator("modal_note",{rules:[],
-                                        })(
-                                            <Textarea style={{width:171}} autosize />
-                                        )
-                                    }
-                                </FormItem>
-
-                                <FormItem label="示例" key="example_note">
-                                    {
-                                        getFieldDecorator("modal_example",{rules:[],
-                                        })(
-                                            <Textarea style={{width:171}} autosize/>
-                                        )
-                                    }
-                                </FormItem>
-                            </div>
                         </Form>
                 </Modal>
         </React.Fragment>

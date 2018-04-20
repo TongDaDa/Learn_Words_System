@@ -8,7 +8,7 @@ public enum ErrorCode {
 
     OK("0", "成功"),
     PARAM_ERROR("9999", "参数错误"),
-    ALREDAY_HAVE("9010", "已经存在"),
+    ALREDAY_HAVE("9010", "此单词已经存在"),
     NOT_HAVE("9002", "不存在"),
 
     HAS_USED_ERROR("10000", "已经使用"),

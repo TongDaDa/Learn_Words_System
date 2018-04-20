@@ -19,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/TongDaDa/Word-learning-system/issues"
   },
-  "homepage": "https://github.com/TongDaDa/Word-learning-system#readme"
+  "homepage": "https://github.com/TongDaDa/Word-learning-system#readme",
+  "devDependencies": {
+    "nprogress": "^0.2.0",
+    "rxjs": "^6.0.0-alpha.3"
+  }
 }

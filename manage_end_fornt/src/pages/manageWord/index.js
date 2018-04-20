@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Table, Menu,message,Modal,Select } from "antd"
+import { Form, Input, Button, Table, Menu,message,Modal,Icon } from "antd"
 import {reqWordList,reqSaveWord,reqDelword,reqGetWordModal} from 'services/api'
 import style from './style.scss';
 import moment from "moment";
@@ -15,7 +15,8 @@ export default class ManageWord extends Component {
 
     constructor(props) {
         super(props);
-        this.modalFields = ["modal_word","modal_root","modal_note","modal_example"];
+        this.headerForm = ['header-word', 'header-root']
+        this.modalFields = ["modal_word","modal_root","modal_note","modal_translated"]
         this.state = {
             tableLoading: true,
             tableData: [],
@@ -27,6 +28,7 @@ export default class ManageWord extends Component {
                 current:1,
                 total:0,
             },
+            exampleSentenceList:[],
         }
     }
 
@@ -51,9 +53,9 @@ export default class ManageWord extends Component {
             dataIndex: 'root',
             key: 'root',
         },{
-            title: 'example',
-            dataIndex: 'example',
-            key: 'example',
+            title: 'translated',
+            dataIndex: 'translated',
+            key: 'translated',
         },{
             title: 'note',
             dataIndex: 'note',
@@ -85,62 +87,83 @@ export default class ManageWord extends Component {
             currentHandleId:id,
         })
         reqGetWordModal(id).then((res)=>{
-            console.log(res);
-            const [left] = splitObject(res.wordModal,["note","example","word","root"])
-            console.log(left);
-            this.props.form.setFieldsValue(this.handleFieldsPrefix(left,false))
+            let [left] = splitObject(res.wordModal,["note","word","example","root","translated"])
+            left.root = left.root === '无' ? '' : left.root;
+            if (left.example) {
+                let exampleSentenceList = JSON.parse(left.example)
+                this.setState({ exampleSentenceList })
+            }
+            left = omit(left, ['example'])
+            this.props.form.setFieldsValue(this.handleFieldsPrefix(left, false))
         })
     }
 
     reqTableList = (pageNum=1,word="",root="") => {
-     this.setState({  tableLoading:true  });
-     if (this.state.isCarryHeaderForm) {
-        word = this.props.form.getFieldsValue().word;
-        root = this.props.form.getFieldsValue().root;
-     }
-     return reqWordList({
-         pageNum,
-         pageSize:10,
-         word,root
-     }).then((res)=>{
-        if (res.errorCode === "0") {
-            this.setState({
-                tableData: addRowsKey(res.wordList || []),
-                tableLoading:false
-            })
-        }
-     })
+         this.setState({tableLoading: true});
+         if (this.state.isCarryHeaderForm) {
+            word = this.props.form.getFieldsValue().word;
+            root = this.props.form.getFieldsValue().root;
+         }
+         return reqWordList({
+             pageNum,
+             pageSize:10,
+             word,root
+         }).then((res)=>{
+             if (res.errorCode === "0") {
+                this.setState({
+                    tableData: addRowsKey(res.wordList || []),
+                    tableLoading:false,
+                    paginationOption:{...this.state.paginationOption,total:res.totalResult}
+                })
+            }
+         })
     }
 
     forms = [{
         label: '单词',
-        field: 'word',
+        field: 'header-word',
         rules:[],
     },{
         label: '词根',
-        field: 'root',
+        field: 'header-root',
         rules:[],
     }]
 
     modalForms = [{
         label: '单词',
         field: 'modal_word',
-        rules:[],
+        rules:[
+            {required:true,message:"请填写单词"},
+            {pattern:/^[a-zA-z]+$/g,message:"单词必须为字母形势"}
+        ],
     },{
         label: '词根',
         field: 'modal_root',
-        rules:[],
-     }]
+        rules:[
+            {pattern:/^[a-zA-z]*$/g,message:"词根必须为字母形势"}
+        ],
+     },{
+        label: '翻译',
+        field: 'modal_translated',
+        rules:[
+            {required:true, message:"请填写"}
+        ],
+    }]
 
     onHeaderSearchSubmit = (event,values)=>{
         event.preventDefault();
         const {validateFields} = this.props.form;
-        validateFields((err,values)=>{
+        const ar = this.forms.map((i,k)=> i.field )
+        validateFields(ar,(err,values)=>{
             if (err) { return; }
+            for (let key in values) {
+                values[key.split('-')[1]] = values[key]
+                try{
+                    delete values[key]
+                } catch (err){ }
+            }
             const {word,root} = values;
-            let isAll = false;
-            if (!word && !root) { isAll = true }
-            this.setState({isCarryHeaderForm:isAll})
+            this.setState({isCarryHeaderForm: !word && !root })
             this.reqTableList(this.state.paginationOption.current,word,root)
         })
     }
@@ -148,21 +171,31 @@ export default class ManageWord extends Component {
     clearModal = ()=>{
         this.props.form.resetFields(this.modalFields)
         this.setState({
+            exampleSentenceList:[{sentence:null,translated:null}],
             visibleModal:false,
             curModalOpenText:"",
         })
-    } 
+    }
 
+    /**
+     * @note
+     * transform fields of form key of prefix
+     * @param values
+     * @param type
+     * @return {*}
+     */
     handleFieldsPrefix = (values,type)=>{
         if (type) {
             const [left] = splitObject(values,this.modalFields)
             Object.keys(left).forEach(field=>{
-                left[field.replace("modal_","")]=left[field]; delete left.field;
+                left[field.replace("modal_","")]= left[field];
+                try { delete left[field]; } catch (err) { }
             })
             return left;            
         } else {
             Object.keys(values).forEach(field=>{
-                values["modal_"+field] = values[field]; delete values.field;
+                values["modal_"+field] = values[field];
+                try { delete values[field]; } catch (err) { }
             });
             return values;
         }
@@ -171,16 +204,36 @@ export default class ManageWord extends Component {
     handleModalOk = ()=>{
         this.props.form.validateFields(this.modalFields,(err,values)=>{
             if (err) return;
-            const {currentHandleId,curModalOpenText} = this.state;
-            let params = this.handleFieldsPrefix(values,true);
-            if (curModalOpenText== "编辑词汇") {
+            const {currentHandleId,exampleSentenceList,curModalOpenText} = this.state;
+            const IS_EDIT = curModalOpenText === "编辑词汇"
+            let params = this.handleFieldsPrefix(values, true);
+            const deepFormatJudge = (sentence) => {
+                return /^[\u4E00-\u9FA5]+$/g.test(sentence.translated)
+            }
+            if (!exampleSentenceList.every((i)=> i.sentence && i.translated)) {
+                message.warn('请把sentence填写完整')
+                return;
+            } else if (!exampleSentenceList.every(deepFormatJudge)) {
+                message.warn('例子翻译都搞成英文的啦？看来你不需要我啦!')
+                return;
+            }
+            params.root = values.root || '无'
+            params.example = JSON.stringify(exampleSentenceList)
+            if (IS_EDIT) {
                 if (!currentHandleId) { message.error("编辑失败，请重试"); return; }
                 params.id = this.state.currentHandleId;
             }
             reqSaveWord(params).then((res)=>{
                 if (res.errorCode === "0") {
                     message.success("保存成功");
-                    this.reqTableList(1,"","")
+                    if (IS_EDIT) {
+                        const lastPage = Math.ceil(this.state.paginationOption.total / 10);
+                        this.setState({
+                            paginationOption: Object.assign(this.state.paginationOption, {current: lastPage})
+                        })
+                        this.reqTableList(...this.searchHeaderForm(lastPage).filter(Number))
+                    }
+                    this.reqTableList(...this.searchHeaderForm().filter(Number))
                     this.clearModal();
                 }
             })
@@ -194,8 +247,60 @@ export default class ManageWord extends Component {
         })
     }
 
+    paginationChange = (n)=>{
+        const {isCarryHeaderForm} = this.state;
+        const {getFieldsValue} = this.props.form;
+        this.setState({
+            paginationOption:Object.assign(this.state.paginationOption,{current:n})
+        });
+        if (isCarryHeaderForm) {
+            const {word,root} = getFieldsValue();
+            this.reqTableList(n,word,root);
+        } else {
+            this.reqTableList(n);
+        }
+    }
+
+    /**
+     * @note
+     * @param margeSource margeOptions , the index shall prevail
+     * @return {Array}
+     */
+    searchHeaderForm = (margeSource=[]) => {
+        let arr = [this.state.paginationOption.current];
+        if (this.state.isCarryHeaderForm) {
+            arr.concat(["",""])
+        } else {
+            const fields = this.props.form.getFieldsValue();
+            arr.push(...this.headerForm.map((key)=> fields[key] ))
+        }
+        for (let i = 0; i < margeSource.length; i++) { arr[i] = margeSource[i] }
+        return arr
+    }
+
+    handleAddExample =  (handleType,index)=>{
+        const exampleSentenceList = this.state.exampleSentenceList;
+        if (handleType === 'add') {
+            exampleSentenceList.push({sentence:null,translated:null});
+        } else {
+            exampleSentenceList.splice(index,1)
+        }
+        this.setState({exampleSentenceList:  addRowsKey(exampleSentenceList)})
+    }
+
+    handleExampleInputChange = (t,k,e)=>{
+        const exampleSentenceList = this.state.exampleSentenceList;
+        const value = e.target.value;
+        if (t === "sentence") {
+            exampleSentenceList[k].sentence = value;
+        } else {
+            exampleSentenceList[k].translated = value;
+        }
+        this.setState({exampleSentenceList})
+    }
+
     render() {
-        const {tableLoading,tableData,paginationOption,visibleModal,curModalOpenText} = this.state;
+        const {tableLoading,tableData,paginationOption,visibleModal,curModalOpenText,exampleSentenceList} = this.state;
         const {getFieldDecorator} = this.props.form;
         return <React.Fragment>
                 <header className={style.header}>
@@ -253,25 +358,41 @@ export default class ManageWord extends Component {
                                       </FormItem>
                                     )
                             }
-                            <div style={{marginTop:10}}>
-                                <FormItem label="备注" key="modal_note">
-                                    {
-                                        getFieldDecorator("modal_note",{rules:[],
-                                        })(
-                                            <Textarea style={{width:171}} autosize />
-                                        )
-                                    }
-                                </FormItem>
+                            <FormItem label="备注" key="example_note">
+                                {
+                                    getFieldDecorator("modal_note",{rules:[],
+                                    })(
+                                        <Textarea style={{width:171}} autosize/>
+                                    )
+                                }
+                            </FormItem>
 
-                                <FormItem label="示例" key="example_note">
-                                    {
-                                        getFieldDecorator("modal_example",{rules:[],
-                                        })(
-                                            <Textarea style={{width:171}} autosize/>
-                                        )
-                                    }
-                                </FormItem>
-                            </div>
+                            <FormItem label="例句" key="example_sentence" />
+                            {
+                                !exampleSentenceList.length && <Icon
+                                    style={{lineHeight:39 + 'px'}}
+                                    onClick={() => {this.handleAddExample('add')}}
+                                    type="plus-circle"
+                                    key="plus"
+                                />
+                            }
+                            {
+                                exampleSentenceList.map((i,k)=> <div key={k} className={style.exampleSentenceItem}>
+                                      <span className={style.formPrefix}>
+                                          <Icon onClick={() => {this.handleAddExample('remove', k)}} type="minus-circle" key="minus" />
+                                           <Icon
+                                               onClick={() => {this.handleAddExample('add')}}
+                                               type="plus-circle"
+                                               key="plus"
+                                           />
+                                        </span>
+                                        <div className={style.examLine}>
+                                            <Textarea style={{width: 171,marginRight:10}} onChange={(e)=>{this.handleExampleInputChange("sentence",k,e)}} value={i.sentence} autosize />
+                                            <Textarea style={{width: 171}} onChange={(e)=>{this.handleExampleInputChange("translated",k,e)}} value={i.translated}  autosize />
+                                        </div>
+                                    </div>
+                                )
+                            }
                         </Form>
                 </Modal>
         </React.Fragment>

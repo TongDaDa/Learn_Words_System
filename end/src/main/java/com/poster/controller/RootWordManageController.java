@@ -27,16 +27,14 @@ public class RootWordManageController {
     @Autowired
     RootWordManageService rootWordManageService;
 
-    @ApiOperation(value = "创建词根")
+    @ApiOperation(value = "词根列表")
     @RequestMapping(value = "list", method = RequestMethod.POST)
     public RootWordManageResponse list(@ApiParam(required = true, value = "页码", name = "pageNum") @RequestParam Integer pageNum,
-                                      @ApiParam(required = true, value = "页数", name = "pageSize") @RequestParam Integer pageSize,
-                                      @ApiParam(required = true, value = "属于的词根", name = "root") @RequestParam String root,
-                                      @ApiParam(required = true, value = "单词备注", name = "note") @RequestParam(required = false) String note) throws MyException {
+                                       @ApiParam(required = true, value = "页数", name = "pageSize") @RequestParam Integer pageSize) throws MyException {
         RootWordManageResponse rd = new RootWordManageResponse();
         ErrorCode result = ErrorCode.OK;
         try {
-            Page<RootWordManage> page = rootWordManageService.list(root,note,pageNum,pageSize);
+            Page<RootWordManage> page = rootWordManageService.list(pageNum,pageSize);
             rd.setRootWordList(page.getContent());
             rd.setTotalResult(page.getTotalElements());
         } catch (MyException e) {

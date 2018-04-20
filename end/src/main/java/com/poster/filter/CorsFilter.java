@@ -7,6 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+
+/**
+ * {@link org.springframework.stereotype.Component}
+ */
 @Component
 public class CorsFilter implements Filter {
 

@@ -40,21 +40,7 @@ public class RootWordManageService {
         rootWordManageRepository.save(rootWordManage);
     }
 
-    public Page<RootWordManage> list(String root, String note, Integer pageSize, Integer pageNum) {
-        return rootWordManageRepository.findAll(this.getWhereClause(root, note), new PageRequest(pageNum-1,pageSize));
-    }
-
-    private Specification<RootWordManage> getWhereClause(String rt, String note) {
-        return (root, query, cb) -> {
-            List<Predicate> predicate = new ArrayList<>();
-            if (!StringUtils.isEmpty(rt)) {
-                predicate.add(cb.like(root.get("root").as(String.class), "%"+rt+"%"));
-            }
-            if (!StringUtils.isEmpty(note)) {
-                predicate.add(cb.like(root.get("note").as(String.class), "%"+note+"%"));
-            }
-            Predicate[] pre = new Predicate[predicate.size()];
-            return query.where(predicate.toArray(pre)).getRestriction();
-        };
+    public Page<RootWordManage> list(Integer pageSize, Integer pageNum) {
+        return rootWordManageRepository.findAll(new PageRequest(pageNum - 1,pageSize));
     }
 }

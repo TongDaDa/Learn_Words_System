@@ -7,13 +7,13 @@
         path: 'manage_word',
     }, {
         name: '词根管理',
-        path: 'manage_root',
-    }, {
-        name: '复习计划管理',
-        path: 'kind',
+        path: 'root',
     }, {
         name: '文章管理',
-        path: 'workplace'
+        path: 'essay'
+    }, {
+        name: '复习计划管理',
+        path: 'learnPlan',
     }],
 },{
     name: "复习计划",

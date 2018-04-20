@@ -42,14 +42,3 @@ export function removeRowsKey(data) {
     }
     return data || [];
 }
-
-export function dateFormat(time){
-    if(time == undefined || time == null ||time == "")return;
-    let zero=(n)=>{
-        return n = n>0&&n<10 ? "0"+n : n;
-    };
-    let y = new Date(time).getFullYear();
-    let m = new Date(time).getMonth() + 1;
-    let d = new Date(time).getDate();
-    return zero(y)+"-"+zero(m)+"-"+zero(d)
-};
