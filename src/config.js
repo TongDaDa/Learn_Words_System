@@ -1,4 +1,4 @@
-let REQUEST_URL =  'http://39.107.66.37:8889';
+let REQUEST_URL =  'http://39.107.66.37:8899';
 if (process.env.NODE_ENV !== "PRODUCTION") {
     REQUEST_URL = 'http://127.0.0.1:8899'
 }

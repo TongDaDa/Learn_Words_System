@@ -36,7 +36,6 @@ export async function reqDelword(id) {  /* 删除单词 */
 
 
 /******************* root ************************/
-
 export async function reqRootList(params){  /* 请求单词列表 */
     return request('/root/list',{
         method: 'POST',
