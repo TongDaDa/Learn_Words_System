@@ -1,4 +1,8 @@
-body{   font-size: 1rem;   }
+@charset "UTF-8";
+/**
+@import '~antd/lib/style';
+@import "~antd/lib/style/components.less";
+**/
 :global{
   body{
     background: #f0f2f5 !important;

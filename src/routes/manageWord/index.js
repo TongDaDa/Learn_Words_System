@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Table, Menu,message,Modal,Icon } from "antd"
+import { Form, Input, Button, Table, Menu, message,Modal,Icon } from "antd"
 import {reqWordList,reqSaveWord,reqDelword,reqGetWordModal} from 'services/api'
 import style from './style.scss';
 import moment from "moment";
-import {addRowsKey,omit,splitObject} from 'utils/util'
+import {addRowsKey,omit,splitObject,mapStateMiddleWare} from 'utils/util'
+import {connect} from 'react-redux';
 const FormItem = Form.Item;
 const Textarea = Input.TextArea;
 
+@connect(mapStateMiddleWare('manageWord',['currentState']))
 @Form.create()
 export default class ManageWord extends Component {
 
@@ -32,9 +34,7 @@ export default class ManageWord extends Component {
         }
     }
 
-    componentDidMount(){
-       this.reqTableList(1);
-    }
+    componentDidMount(){this.reqTableList(1); }
 
     columns = [
         {
@@ -151,7 +151,7 @@ export default class ManageWord extends Component {
     }]
 
     onHeaderSearchSubmit = (event,values)=>{
-        event.preventDefault();
+        event.preventDefault()
         const {validateFields} = this.props.form;
         const ar = this.forms.map((i,k)=> i.field )
         validateFields(ar,(err,values)=>{
@@ -208,7 +208,7 @@ export default class ManageWord extends Component {
             const IS_EDIT = curModalOpenText === "编辑词汇"
             let params = this.handleFieldsPrefix(values, true);
             const deepFormatJudge = (sentence) => {
-                return /^[\u4E00-\u9FA5]+$/g.test(sentence.translated)
+                return !/^[a-zA-Z]+$/g.test(sentence.translated)
             }
             if (!exampleSentenceList.every((i)=> i.sentence && i.translated)) {
                 message.warn('请把sentence填写完整')
@@ -241,6 +241,7 @@ export default class ManageWord extends Component {
     }
 
     createWord = ()=>{
+        console.log(this.props, this.props.currentState);
         this.setState({
             curModalOpenText:"添加词汇",
             visibleModal:true,
@@ -319,9 +320,9 @@ export default class ManageWord extends Component {
                                 </FormItem>
                             )
                         }
-                           <FormItem key="submit">
-                                <Button htmlType="submit"> 搜索 </Button>
-                           </FormItem>
+                        <FormItem key="submit">
+                            <Button htmlType="submit"> 搜索 </Button>
+                        </FormItem>
                     </Form>
                 </header>
                 <section>

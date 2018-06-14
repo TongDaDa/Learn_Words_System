@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {Layout, Menu, Icon} from 'antd';
-import routes from '../routes'
+import {Layout, Menu, Icon, message} from 'antd';
+import getRouteData from '../common/router'
 import {getMenuData} from '../common/menu';
-import NotFound from '../routes/Exception/404';
 import {Link,Switch,Route} from 'react-router-dom';
 const {SubMenu} = Menu;
-const {Sider, Content} = Layout;
+const {Sider, Content, Header} = Layout;
+import CatchWrapper from 'utils/catchWrapper'
+import GlobalHeader from '../components/GlobalHeader';
 
 const getIcon = (icon) => {
     return <Icon type={icon} />;
@@ -18,9 +19,11 @@ export default class UserLayout extends Component {
     constructor(props) {
         super(props);
         this.menus = getMenuData();
+        this.routes = getRouteData(props.app);
         this.state = {
             location: this.props.location,
             collapsed: true,
+            isMobile: false,
             openKeys: this.getDefaultCollapsedSubMenus(this.props),
         };
     }
@@ -42,10 +45,30 @@ export default class UserLayout extends Component {
         return currentMenuSelectedKeys;
     }
 
-    toggle = () => {
+    toggle = (collapsed) => {
         this.setState({
-            collapsed: !this.state.collapsed,
+            collapsed: collapsed ? collapsed : !this.state.collapsed,
         });
+    }
+
+    handleNoticeVisibleChange = (visible) => {
+        if (visible) {
+            this.props.dispatch({
+                type: 'global/fetchNotices',
+            });
+        }
+    }
+
+    handleMenuClick = ({ key }) => {
+        if (key === 'triggerError') {
+            this.props.dispatch(routerRedux.push('/exception/trigger'));
+            return;
+        }
+        if (key === 'logout') {
+            this.props.dispatch({
+                type: 'login/logout',
+            });
+        }
     }
 
     handleOpenChange = (openKeys) => {
@@ -127,11 +150,27 @@ export default class UserLayout extends Component {
             .filter(item => !!item);
     }
 
+    handleMenuCollapse = (collapsed) => {
+        this.props.dispatch({
+            type: 'global/changeLayoutCollapsed',
+            payload: collapsed,
+        });
+    }
+
+    handleNoticeClear = (type) => {
+        message.success(`清空了${type}`);
+        this.props.dispatch({
+            type: 'global/clearNotices',
+            payload: type,
+        });
+    }
+
     render() {
 
         const {location,children} = this.props;
-        const { openKeys } = this.state;
+        const { openKeys, collapsed } = this.state;
         const pathname = location.pathname;
+
 
         // if pathname can't match, use the nearest parent's key
         let selectedKeys = this.getSelectedMenuKeys(pathname);
@@ -143,7 +182,7 @@ export default class UserLayout extends Component {
             <Sider
                 collapsible
                 breakpoint="md"
-                collapsed={this.state.collapsed}
+                collapsed={collapsed}
                 onCollapse={this.toggle}
                 width={256}
             >
@@ -159,14 +198,28 @@ export default class UserLayout extends Component {
                 </Menu>
             </Sider>
             <Layout>
+                <GlobalHeader
+                    logo='https://iknowpc.bdimg.com/static/common/pkg/common_z.75a813d.png'
+                    currentUser={{name:'12'}}
+                    fetchingNotices={true}
+                    notices=''
+                    collapsed={collapsed}
+                    isMobile={this.state.isMobile}
+                    onNoticeClear={this.handleNoticeClear}
+                    onCollapse={this.toggle}
+                    onMenuClick={this.handleMenuClick}
+                    onNoticeVisibleChange={this.handleNoticeVisibleChange}
+                />
                 <Content className="app-user-container">
-                    <Switch>
-                        {/*{*/}
-                            {/*routes.map(r =>*/}
-                                {/*<Route exact={r.isExact} path={r.path} component={r.component} />*/}
-                            {/*)*/}
-                        {/*}*/}
-                    </Switch>
+                    <CatchWrapper>
+                        <Switch>
+                            {
+                                this.routes.map(r =>
+                                    <Route exact={r.isExact} path={r.path} key={r.path} component={r.component} />
+                                )
+                            }
+                        </Switch>
+                    </CatchWrapper>
                 </Content>
             </Layout>
         </Layout>

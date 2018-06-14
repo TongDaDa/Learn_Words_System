@@ -29,14 +29,14 @@ Object.keys(theme).forEach((variable)=>{
     }catch (e){}
 })
 
-console.log(theme);
-
 module.exports = {
     entry:{
         main:path.join(SRC_PATH,"main.js"),
         vendor:[
             "react",
             "react-dom",
+            "react-router",
+            "antd",
             "immutable",
         ]
     },
@@ -68,8 +68,15 @@ module.exports = {
         }, {
             test:[/\.less/],
             use:[
-                {loader: 'style-loader'},
-                {loader: 'css-loader'},
+                { loader: 'style-loader' },
+                {
+                    loader: 'css-loader',
+                    // options:{
+                    //     importLoaders: 1,
+                    //     modules:true,
+                    //     except:'node_module'
+                    // }
+                },
                 {
                     loader:`less-loader`,
                     options:{

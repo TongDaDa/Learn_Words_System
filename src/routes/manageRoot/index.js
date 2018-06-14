@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Table, Menu,message,Modal,Select } from "antd"
+import { Form, Input, Button, Table, Menu,message,Modal,Select,Spin } from "antd"
 import {reqRootList,reaSaveRoot,reqDelRoot,reqGetRootModal} from 'services/api'
 import style from './style.scss';
 import {addRowsKey,omit,splitObject} from 'utils/util'
+import {connect} from 'react-redux'
+
 const FormItem = Form.Item;
 const Textarea = Input.TextArea;
 
+@connect(state=>({...state,name:'liutong'}))
 @Form.create()
 export default class ManageWord extends Component {
 
@@ -30,7 +33,8 @@ export default class ManageWord extends Component {
     }
 
     componentDidMount(){
-       this.reqTableList(1);
+       // this.reqTableList(1);
+
     }
 
     columns = [
@@ -172,10 +176,11 @@ export default class ManageWord extends Component {
     }
 
     createWord = ()=>{
-        this.setState({
-            curModalOpenText:"添加词汇",
-            visibleModal:true,
-        })
+        this.props.dispatch({type:'asdasd',word:'inter'})
+        // this.setState({
+        //     curModalOpenText:"添加词汇",
+        //     visibleModal:true,
+        // })
     }
 
     forms = [{
@@ -201,6 +206,7 @@ export default class ManageWord extends Component {
     render() {
         const {tableLoading,tableData,paginationOption,visibleModal,curModalOpenText} = this.state;
         const {getFieldDecorator} = this.props.form;
+        console.log(this.props);
         return <React.Fragment>
                 <header className={style.header}>
                     <Button onClick={this.createWord} type="primary"> 添加 </Button>
@@ -218,9 +224,9 @@ export default class ManageWord extends Component {
                                 </FormItem>
                             )
                         }
-                           <FormItem key="submit">
-                                <Button htmlType="submit"> 搜索 </Button>
-                           </FormItem>
+                        <FormItem key="submit">
+                            <Button htmlType="submit"> 搜索 </Button>
+                        </FormItem>
                     </Form>
                 </header>
                 <section>
@@ -234,7 +240,6 @@ export default class ManageWord extends Component {
                         }}
                     />
                 </section>
-        
                 <Modal
                      title={curModalOpenText}
                      visible={visibleModal}

@@ -15,9 +15,9 @@ function isPromise(obj) {
  */
 const checkPermissions = (authority, currentAuthority, target, Exception) => {
 
-    if (isPromise(currentAuthority)) {
-        return '认证中'
-    }
+   if (isPromise(currentAuthority)) {
+       return '认证中'
+   }
 
   // 数组处理
   if (Array.isArray(authority)) {

@@ -42,3 +42,16 @@ export function removeRowsKey(data) {
     }
     return data || [];
 }
+
+export const mapStateMiddleWare = (namespace, stateArr, cb) => (state) => {
+    if (!Array.isArray(state)) new TypeError();
+    let obj = {}
+    const localState = state[namespace]
+    Object.keys(localState).forEach((key) => {
+        if (stateArr.indexOf(key) !== -1) {
+            obj[key] = localState[key]
+        }
+    })
+    if (cb) { return cb(state, obj) }
+    return obj;
+}

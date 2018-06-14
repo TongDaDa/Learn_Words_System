@@ -1,15 +1,15 @@
 import { verifyLogin } from 'services/authority';
 
+//三种权限: 参观者, 客户, 管理
+const authorites = ['admin','guest','visitor']
+
 const getAuthority = () => {
-    let autohor = 'visitor'
-    // return verifyLogin().then((res)=>{
-    //     return autohor
-    // })
-    return new Promise((res)=>{
-        setTimeout(()=>{
-            // autohor = 'guest'
-            res(autohor)
-        },500)
+    let curAuthority = authorites[0]
+    return verifyLogin().then((res) => {
+        if (res.authorityStatus != null) { curAuthority = authorites[res.authorityStatus] }
+        return curAuthority;
+    }).catch(()=>{
+        return authorites[0]
     })
 }
 

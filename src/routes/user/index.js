@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import LoginCom from './login'
 import ForgoPas from './forgotPas'
+import Register from './register'
 import style from './index.scss'
 import classnames from 'classnames'
 

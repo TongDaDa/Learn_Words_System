@@ -1,7 +1,7 @@
 ﻿const menuData = [{
     name: '基础学习',
     icon: 'dashboard',
-    path: '/base',
+    path: '/user/base',
     children: [{
         name: '生词管理',
         path: 'manage_word',
@@ -9,11 +9,14 @@
         name: '词根管理',
         path: 'root',
     }, {
-        name: '文章管理',
+        name: '句子管理',
+        path: 'sentence',
+    }, {
+        name: '短文管理',
         path: 'essay'
     }, {
-        name: '复习计划管理',
-        path: 'learnPlan',
+        name: '词组管理',
+        path: 'wordGroup',
     }],
 },{
     name: "复习计划",
@@ -22,10 +25,13 @@
     children: [{
         name: '文章阅读',
         path: 'read_essay',
-    }, {
+    },{
+        name: '复习计划管理',
+        path: 'learnPlan',
+    },{
         name: '词根',
         path: 'root',
-    }, {
+    },{
         name: '单词',
         path: 'workplace'
     }],

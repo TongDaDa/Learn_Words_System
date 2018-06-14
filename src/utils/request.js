@@ -1,6 +1,4 @@
 import { notification , message} from 'antd';
-import store from '../model';
-// import history from 'history/createHashHistory'
 import {REQUEST_URL} from '../config'
 
 const codeMessage = {
@@ -47,26 +45,25 @@ export default function request(url, options) {
 
     url = REQUEST_URL + url;
 
-    // url = "http://39.107.66.37:8090/cities";
-
-    const defaultOptions = { mode: 'cors', };
+    const defaultOptions = { mode: 'cors' };
     const newOptions = { ...defaultOptions, ...options };
     const data = newOptions.body;
     const formData = new FormData();
 
     if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
-        for (let key in data){formData.append(key,data[key])}
-        newOptions.body = formData;
+        for (let key in data){ formData.append(key,data[key]) }
     }
 
+    newOptions.body = formData;
+
     return fetch(url, newOptions)
-        .then(checkStatus)
-        .then((response) => response.json() ).then(data => {
-            if (data.errorCode !== '0' && data.value) {
-                message.error(data.value)
-            }
-            return new Promise((resolve)=>{
-                resolve(data)
-            });
-        })
+            .then(checkStatus)
+            .then((response) => response.json() ).then(data => {
+                if (data.errorCode !== '0' && data.value) {
+                    message.error(data.value)
+                }
+                return new Promise((resolve)=>{
+                    resolve(data)
+                });
+            })
 }

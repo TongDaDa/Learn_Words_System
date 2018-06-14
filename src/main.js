@@ -1,14 +1,14 @@
 import ReactDOM from "react-dom";
 import React from "react";
 import Routes from './routes'
+// import {create} from 'dva-core'
 import './assets/css/global.scss'
 import 'antd/lib/style'
 import 'antd/lib/style/components.less'
+import {create} from 'dva-core'
 
-// if (/\/#\/$/.test(curPathname)) {
-//     history.replaceState({},'','#/base/record')
-// }
+const app = create({},{})
 
+app.start();
 
-const {o: Componen} = {o:12}
-ReactDOM.render(<Routes />,document.getElementById('root'));
+ReactDOM.render( <Routes store={app._store} app={app}/>, document.getElementById('root'));
