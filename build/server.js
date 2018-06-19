@@ -3,9 +3,15 @@ const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const path = require('path')
 let compiler = webpack(webpackConfig);
-console.log(path.join(__dirname, "..", 'static'));
+
 let server = new WebpackDevServer(compiler, {
     contentBase:path.join(__dirname, "..",'static'),
     publicPath: "/",
-    stats: {colors: true,chunks:false},
+    proxy: {
+        '/api': {
+            target:"http://127.0.0.1:8899",
+            pathRewrite: {'^/api' : ''}
+        },
+    },
+    stats: { colors: true, chunks:false },
 }).listen(9090);

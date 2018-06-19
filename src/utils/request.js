@@ -57,13 +57,13 @@ export default function request(url, options) {
     newOptions.body = formData;
 
     return fetch(url, newOptions)
-            .then(checkStatus)
-            .then((response) => response.json() ).then(data => {
+            .then(checkStatus,()=>{ })
+            .then((response) => response.json() )
+            .then(data => {
                 if (data.errorCode !== '0' && data.value) {
                     message.error(data.value)
                 }
-                return new Promise((resolve)=>{
-                    resolve(data)
-                });
+                return data
             })
+            .catch((err) => {})
 }
