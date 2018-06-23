@@ -6,6 +6,7 @@
 /ios/build/
 /ios/bundle/
 /dist
+/src/config.js
 
 # Xcode
 #
