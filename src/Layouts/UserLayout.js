@@ -5,7 +5,7 @@ import {getMenuData} from '../common/menu';
 import {Link,Switch,Route} from 'react-router-dom';
 const {SubMenu} = Menu;
 const {Sider, Content, Header} = Layout;
-import CatchWrapper from 'utils/catchWrapper'
+import CatchWrapper from 'utils/CatchWrapper'
 import GlobalHeader from '../components/GlobalHeader';
 
 const getIcon = (icon) => {
