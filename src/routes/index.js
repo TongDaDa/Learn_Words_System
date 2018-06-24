@@ -3,6 +3,8 @@ import zhCN from 'antd/lib/locale-provider/zh_CN';
 import {LocaleProvider} from 'antd'
 import {Provider} from 'react-redux';
 import {HashRouter,Switch,Route} from 'react-router-dom';
+
+//注: here have a request of authority
 import AuthorityRoute from 'utils/AuthorityRender'
 import UserLayout from '../Layouts/UserLayout'
 import UnverifiedLayout from '../Layouts/UnverifiedLayout'
@@ -21,19 +23,19 @@ export default ({store,app})=>(
                         component={props => <UserLayout app={app} {...props} />}
                         redirectPath='/login'
                     />
+                    {/*<AuthorizedRoute*/}
+                        {/*path="/register"*/}
+                        {/*key="registerAuthorizedRoute"*/}
+                        {/*authority={['admin','visitor','guest']}*/}
+                        {/*render={ props => <UnverifiedLayout {...props} />}*/}
+                        {/*redirectPath='/404'*/}
+                    {/*/>*/}
                     <AuthorizedRoute
-                        path="/register"
-                        key="registerAuthorizedRoute"
-                        authority={['admin','visitor','guest']}
-                        render={ props => <UnverifiedLayout {...props} />}
-                        redirectPath='/404'
-                    />
-                    <AuthorizedRoute
-                        path="/login"
+                        path="/"
                         key="loginAuthorizedRoute"
                         authority={['admin','visitor']}
                         render={ props => <UnverifiedLayout {...props} />}
-                        redirectPath='/register'
+                        redirectPath='/login'
                     />
                 </Switch>
             </HashRouter>

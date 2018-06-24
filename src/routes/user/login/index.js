@@ -31,7 +31,7 @@ export default class Login extends Component {
             if (err) return
             reqLogin(values).then(res => {
                 if (res.errorCode === '0') {
-                    // history.replace('/user');
+                    window.location.replace('/')
                 }
             }).catch((err) => { message.error('登录失败'); })
         })

@@ -45,7 +45,7 @@ export default function request(url, options) {
 
     url = REQUEST_URL + url;
 
-    const defaultOptions = { mode: 'cors' };
+    const defaultOptions = { mode: 'cors', credentials: 'same-origin' };
     const newOptions = { ...defaultOptions, ...options };
     const data = newOptions.body;
     const formData = new FormData();

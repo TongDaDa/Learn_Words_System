@@ -1,7 +1,9 @@
+const {REQUEST_PROD_URL,REQUEST_LOCAL_URL} = require('../src/config')
 const webpackConfig = require("./webpack.config.dev.js");
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const path = require('path')
+
 let compiler = webpack(webpackConfig);
 
 let server = new WebpackDevServer(compiler, {
@@ -9,7 +11,7 @@ let server = new WebpackDevServer(compiler, {
     publicPath: "/",
     proxy: {
         '/api': {
-            target:"http://127.0.0.1:8899",
+            target:REQUEST_PROD_URL,
             pathRewrite: {'^/api' : ''}
         },
     },

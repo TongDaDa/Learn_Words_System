@@ -11,9 +11,7 @@ export default class PromiseRender extends React.PureComponent {
       .then((currentAuthority) => {
           checkPermissions(currentAuthority)
       })
-      .catch(() => {
-
-      });
+      .catch(() => {});
   }
   render() {
     const C = this.state.component;

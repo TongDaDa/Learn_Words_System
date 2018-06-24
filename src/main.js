@@ -1,7 +1,6 @@
 import ReactDOM from "react-dom";
 import React from "react";
 import Routes from './routes'
-// import {create} from 'dva-core'
 import './assets/css/global.scss'
 import 'antd/lib/style'
 import 'antd/lib/style/components.less'
