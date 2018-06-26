@@ -4,12 +4,13 @@ import { verifyLogin } from 'services/authority';
 const authorites = ['admin','guest','visitor']
 
 const getAuthority = () => {
-    let curAuthority = authorites[0]
+    let curAuthority = authorites[2]
     return verifyLogin().then((res) => {
-        if (res.authorityStatus != null) { curAuthority = authorites[res.authorityStatus] }
-        return curAuthority;
+        const { checkResultResponse } = res;
+        if (checkResultResponse != null) { curAuthority = authorites[checkResultResponse.authorityStatus] }
+        return curAuthority
     }).catch(()=>{
-        return authorites[0]
+        return curAuthority
     })
 }
 

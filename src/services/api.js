@@ -2,10 +2,9 @@ import request from '../utils/request';
 
 function toStrParams (obj){
     let str = '';
-    for (let key in obj){
-        str += `${key}/${obj[key]}`
-    }
-    return str
+    for (let key in obj){ str += `&${key}=${obj[key]}` }
+    if (!str) { return str }
+    return `?${str.substr(1)}`
 }
 
 export async function reqWordList(params){  /* 请求单词列表 */

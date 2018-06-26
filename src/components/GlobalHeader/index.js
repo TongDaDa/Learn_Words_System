@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Layout, Menu, Icon, Spin, Tag, Dropdown, Avatar, Divider } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
-// import Debounce from 'lodash-decorators/debounce';
+import Debounce from 'lodash-decorators/debounce';
 import { Link } from 'react-router-dom';
 import NoticeIcon from '../NoticeIcon';
 import HeaderSearch from '../HeaderSearch';
@@ -12,7 +12,7 @@ const { Header } = Layout;
 
 export default class GlobalHeader extends PureComponent {
   componentWillUnmount() {
-    this.triggerResizeEvent.cancel();
+      this.triggerResizeEvent.cancel();
   }
   getNoticeData() {
     const { notices = [] } = this.props;
@@ -46,13 +46,12 @@ export default class GlobalHeader extends PureComponent {
     onCollapse(!collapsed);
     this.triggerResizeEvent();
   }
-  // @Debounce(600)
+  @Debounce(600)
   triggerResizeEvent() { // eslint-disable-line
     const event = document.createEvent('HTMLEvents');
     event.initEvent('resize', true, false);
     window.dispatchEvent(event);
   }
-  //asdas
   render() {
     const {
       currentUser, collapsed, fetchingNotices, isMobile, logo,

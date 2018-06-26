@@ -73,8 +73,7 @@ module.exports = {
                     loader: 'css-loader',
                     // options:{
                     //     importLoaders: 1,
-                    //     modules:true,
-                    //     except:'node_module'
+                    //     modules:true
                     // }
                 },
                 {
@@ -88,7 +87,7 @@ module.exports = {
         },{
             test: /\.scss$/,
             // exclude: /node_modules/,
-            use:ExtractTextPlugin.extract({
+            use: ExtractTextPlugin.extract({
                 use:[{
                     loader:"css-loader",
                     options:{

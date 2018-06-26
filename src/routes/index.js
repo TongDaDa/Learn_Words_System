@@ -17,25 +17,27 @@ export default ({store,app})=>(
             <HashRouter>
                 <Switch>
                     <AuthorizedRoute
+                        path="/"
+                        key="baseAuthority"
+                        authority={['guest',"admin"]}
+                        exact={true}
+                        to="/user"
+                        redirectPath='/login'
+                    />
+                    <AuthorizedRoute
                         path="/user"
                         key="userAuthorizedRoute"
-                        authority={['guest']}
+                        authority={['guest',"admin"]}
                         component={props => <UserLayout app={app} {...props} />}
                         redirectPath='/login'
                     />
-                    {/*<AuthorizedRoute*/}
-                        {/*path="/register"*/}
-                        {/*key="registerAuthorizedRoute"*/}
-                        {/*authority={['admin','visitor','guest']}*/}
-                        {/*render={ props => <UnverifiedLayout {...props} />}*/}
-                        {/*redirectPath='/404'*/}
-                    {/*/>*/}
                     <AuthorizedRoute
-                        path="/"
+                        path="/login"
+                        exact={true}
                         key="loginAuthorizedRoute"
                         authority={['admin','visitor']}
                         render={ props => <UnverifiedLayout {...props} />}
-                        redirectPath='/login'
+                        redirectPath='/exception/404'
                     />
                 </Switch>
             </HashRouter>

@@ -27,6 +27,7 @@ export default class Login extends Component {
     FindOutPasClick = () => {}
 
     handleSubmit = (e) => {
+        e.preventDefault();
         this.props.form.validateFields((err,values) => {
             if (err) return
             reqLogin(values).then(res => {

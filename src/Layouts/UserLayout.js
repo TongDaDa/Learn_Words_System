@@ -171,12 +171,13 @@ export default class UserLayout extends Component {
         const { openKeys, collapsed } = this.state;
         const pathname = location.pathname;
 
-
         // if pathname can't match, use the nearest parent's key
         let selectedKeys = this.getSelectedMenuKeys(pathname);
         if (!selectedKeys.length) {
             selectedKeys = [openKeys[openKeys.length - 1]];
         }
+
+        console.log(this.routes);
 
         return <Layout style={{height: '100vh'}}>
             <Sider
@@ -211,7 +212,7 @@ export default class UserLayout extends Component {
                     onNoticeVisibleChange={this.handleNoticeVisibleChange}
                 />
                 <Content className="app-user-container">
-                    <CatchWrapper>
+                    {/*<CatchWrapper>  </CatchWrapper>*/}
                         <Switch>
                             {
                                 this.routes.map(r =>
@@ -219,7 +220,6 @@ export default class UserLayout extends Component {
                                 )
                             }
                         </Switch>
-                    </CatchWrapper>
                 </Content>
             </Layout>
         </Layout>

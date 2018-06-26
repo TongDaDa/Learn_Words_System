@@ -61,7 +61,7 @@ export default (app) => {
         ]},
         {name: '异常页面-500', component: NotFound500, path:"/exception/500",isExact:true},
         {name: '异常页面-403', component: NotFound403, path:"/exception/403", isExact:true},
-        {name: '异常页面-404', component: NotFound404, path:"/user/exception/404", isExact:true}
+        {name: '异常页面-404', component: NotFound404, path:"/exception/404", isExact:true}
     ];
 
     let routes = [];
