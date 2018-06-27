@@ -6,6 +6,9 @@ import style from './style.scss';
 import moment from "moment";
 import {addRowsKey,omit,splitObject,mapStateMiddleWare} from 'utils/util'
 import {connect} from 'react-redux';
+import request from 'utils/request';
+
+
 const FormItem = Form.Item;
 const Textarea = Input.TextArea;
 
@@ -86,7 +89,8 @@ export default class ManageWord extends Component {
             curModalOpenText:"编辑词汇",
             currentHandleId:id,
         })
-        reqGetWordModal(id).then((res)=>{
+
+        reqGetWordModal(id).then(res => {
             let [left] = splitObject(res.wordModal,["note","word","example","root","translated"])
             left.root = left.root === '无' ? '' : left.root;
             if (left.example) {
@@ -96,6 +100,7 @@ export default class ManageWord extends Component {
             left = omit(left, ['example'])
             this.props.form.setFieldsValue(this.handleFieldsPrefix(left, false))
         })
+
     }
 
     reqTableList = (pageNum=1,word="",root="") => {
@@ -218,6 +223,7 @@ export default class ManageWord extends Component {
                 return;
             }
             params.root = values.root || '无'
+            params.note = values.note || ''
             params.example = JSON.stringify(exampleSentenceList)
             if (IS_EDIT) {
                 if (!currentHandleId) { message.error("编辑失败，请重试"); return; }

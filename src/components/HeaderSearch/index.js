@@ -13,7 +13,7 @@ export default class HeaderSearch extends PureComponent {
     placeholder: '',
     dataSource: [],
   };
-  static propTypes = {
+  static PropTypes = {
     className: PropTypes.string,
     placeholder: PropTypes.string,
     onSearch: PropTypes.func,

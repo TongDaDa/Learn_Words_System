@@ -52,12 +52,11 @@ export default function request(url, options) {
 
     if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
         for (let key in data){ formData.append(key,data[key]) }
+        newOptions.body = formData;
     }
 
-    newOptions.body = formData;
-
     return fetch(url, newOptions)
-            .then(checkStatus,()=>{ })
+            .then(checkStatus,()=>{})
             .then((response) => response.json() )
             .then(data => {
                 if (data.errorCode !== '0' && data.value) {
@@ -65,5 +64,5 @@ export default function request(url, options) {
                 }
                 return data
             })
-            .catch((err) => {})
+            .catch((err) => { console.error(err) })
 }
