@@ -168,8 +168,9 @@ export default class ManageWord extends Component {
                 } catch (err){ }
             }
             const {word,root} = values;
-            this.setState({isCarryHeaderForm: !word && !root })
-            this.reqTableList(this.state.paginationOption.current,word,root)
+            this.setState({isCarryHeaderForm: !word && !root , paginationOption: Object.assign(this.state.paginationOption,{current:1}) },(state) => {
+                this.reqTableList(state.paginationOption.current,word,root)
+            })
         })
     }
 
@@ -222,8 +223,8 @@ export default class ManageWord extends Component {
                 message.warn('例子翻译都搞成英文的啦？看来你不需要我啦!')
                 return;
             }
-            params.root = values.root || '无'
-            params.note = values.note || ''
+            params.root = params.root || '无'
+            params.note = params.note || ''
             params.example = JSON.stringify(exampleSentenceList)
             if (IS_EDIT) {
                 if (!currentHandleId) { message.error("编辑失败，请重试"); return; }
@@ -326,6 +327,11 @@ export default class ManageWord extends Component {
                                 </FormItem>
                             )
                         }
+                        <FormItem label="时间" key="date">
+                            {
+
+                            }
+                        </FormItem>
                         <FormItem key="submit">
                             <Button htmlType="submit"> 搜索 </Button>
                         </FormItem>
