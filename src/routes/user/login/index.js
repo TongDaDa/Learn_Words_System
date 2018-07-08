@@ -68,18 +68,18 @@ export default class Login extends Component {
                             <Input prefix={<Icon type="lock" style={{fontSize: 16}}/>} type="password" placeholder="密码"/>
                         )}
                     </FormItem>
-                    <FormItem className="clear" label="验证码" {...wrpperCols}>
-                        <div className="clear">
-                            <div className="verify_code_test left">
-                                {getFieldDecorator('verifyText', {
-                                    rules: [{required: true, pattern: password, message: '验证码输入错误'}],
-                                })(
-                                    <Input placeholder="请输入验证码" maxLength="4"/>
-                                )}
-                            </div>
-                            <div id="verify_code" className="right">  </div>
-                        </div>
-                    </FormItem>
+                    {/*<FormItem className="clear" label="验证码" {...wrpperCols}>*/}
+                        {/*<div className="clear">*/}
+                            {/*<div className="verify_code_test left">*/}
+                                {/*{getFieldDecorator('verifyText', {*/}
+                                    {/*rules: [{required: true, pattern: password, message: '验证码输入错误'}],*/}
+                                {/*})(*/}
+                                    {/*<Input placeholder="请输入验证码" maxLength="4"/>*/}
+                                {/*)}*/}
+                            {/*</div>*/}
+                            {/*<div id="verify_code" className="right">  </div>*/}
+                        {/*</div>*/}
+                    {/*</FormItem>*/}
                     <div className={style.regsiter}>
                         <a href=":javascript;" onClick={this.FindOutPasClick} > 忘记密码? </a>
                         <a href=":javascript;"> 去注册? </a>
