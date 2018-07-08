@@ -11,3 +11,5 @@ const app = create({},{})
 app.start();
 
 ReactDOM.render( <Routes store={app._store} app={app}/>, document.getElementById('root'));
+
+export {app}

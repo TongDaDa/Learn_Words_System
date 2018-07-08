@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Input, Button , Icon, message } from 'antd';
 import hashHistroy from 'history/createHashHistory';
 import classnames from 'classnames';
-import style from '../index.scss'
+import style from '../index.module.scss'
 
 const FormItem = Form.Item;
 

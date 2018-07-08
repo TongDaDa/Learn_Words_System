@@ -9,7 +9,7 @@ class AuthorizedRoute extends React.Component {
   }
   render() {
     const { component: Component, render, authority, to : toPath,
-      redirectPath, ...rest } = this.props;
+      redirectPath, cb, ...rest } = this.props;
       return (
       <Authorized
         authority={authority}
@@ -19,7 +19,10 @@ class AuthorizedRoute extends React.Component {
               toPath ? <Redirect to={{ pathname: toPath }} /> :
                   <Route
                     {...rest}
-                    render={props => (Component ? <Component {...props} /> : render(props))}
+                    render={ props => {
+                      cb && cb();
+                      return (Component ? <Component {...props} /> : render(props))
+                    } }
                   />
           }
       </Authorized>

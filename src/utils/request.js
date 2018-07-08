@@ -1,5 +1,9 @@
 import { notification , message} from 'antd';
 import {REQUEST_URL} from '../config'
+import createHistory from 'history/createHashHistory'
+import renderAuthorize from '../components/Authorized'
+
+const history = createHistory();
 
 const codeMessage = {
     200: '服务器成功返回请求的数据',
@@ -19,6 +23,18 @@ const codeMessage = {
     504: '网关超时',
 };
 
+const requestMiddleWares = []
+const responseMiddleWares = []
+
+responseMiddleWares.push((response) => {
+    if (response.status === 401) {
+        // 用户权限过期
+        history.replace("/login")
+        renderAuthorize("visitor")
+    }
+    return response;
+})
+
 function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
         return response;
@@ -28,6 +44,7 @@ function checkStatus(response) {
         message: `请求错误 ${response.status}: ${response.url}`,
         description: errortext,
     });
+    responseMiddleWares.forEach((middleWare) => middleWare && middleWare(response))
     const error = new Error(errortext);
     error.name = response.status;
     error.response = response;
@@ -46,22 +63,22 @@ export default function request(url, options) {
     url = REQUEST_URL + url;
 
     const defaultOptions = { mode: 'cors', credentials: 'same-origin' };
-    const newOptions = { ...defaultOptions, ...options };
-    const data = newOptions.body;
     const formData = new FormData();
+    const reqParams = { url, newOptions: {...defaultOptions, ...options } }
+    const data = reqParams.newOptions.body;
 
-    if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
+    if (reqParams.newOptions.method === 'POST' || reqParams.newOptions.method === 'PUT') {
         for (let key in data){ formData.append(key,data[key]) }
-        newOptions.body = formData;
+        reqParams.newOptions.body = formData;
     }
 
-    return fetch(url, newOptions)
-            .then(checkStatus,()=>{})
+    requestMiddleWares.forEach( middleWare => { middleWare && middleWare(reqParams) })
+
+    return fetch(reqParams.url, reqParams.newOptions)
+            .then(checkStatus)
             .then((response) => response.json() )
             .then(data => {
-                if (data.errorCode !== '0' && data.value) {
-                    message.error(data.value)
-                }
+                if (data.errorCode !== '0' && data.value) { message.error(data.value) }
                 return data
             })
             .catch((err) => { console.error(err) })

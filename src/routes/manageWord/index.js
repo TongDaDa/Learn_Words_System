@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Table, Menu, message,Modal,Icon } from "antd"
+import { Form, Input, Button, Table, Menu, message,Modal,Icon, DatePicker } from "antd"
 import {reqWordList,reqSaveWord,reqDelword,reqGetWordModal} from 'services/api'
-import style from './style.scss';
+import style from './style.module.scss';
 import moment from "moment";
 import {addRowsKey,omit,splitObject,mapStateMiddleWare} from 'utils/util'
 import {connect} from 'react-redux';
 import request from 'utils/request';
-
-
 const FormItem = Form.Item;
 const Textarea = Input.TextArea;
 
@@ -27,6 +25,7 @@ export default class ManageWord extends Component {
             tableData: [],
             isCarryHeaderForm: false, //当前是否处于搜索条件中
             visibleModal:false,
+            wordNumToday:0,
             curModalOpenText:"",
             currentHandleId:null,
             paginationOption:{
@@ -103,19 +102,17 @@ export default class ManageWord extends Component {
 
     }
 
-    reqTableList = (pageNum=1,word="",root="") => {
+    reqTableList = (pageNum=1,word="",root="", date = '') => {
          this.setState({tableLoading: true});
-         if (this.state.isCarryHeaderForm) {
-            word = this.props.form.getFieldsValue().word;
-            root = this.props.form.getFieldsValue().root;
-         }
+         date = date && date.format("YYYY-MM-DD")
          return reqWordList({
              pageNum,
              pageSize:10,
-             word,root
+             word,root,date
          }).then((res)=>{
              if (res.errorCode === "0") {
                 this.setState({
+                    wordNumToday: res.wordNumToday,
                     tableData: addRowsKey(res.wordList || []),
                     tableLoading:false,
                     paginationOption:{...this.state.paginationOption,total:res.totalResult}
@@ -132,6 +129,11 @@ export default class ManageWord extends Component {
         label: '词根',
         field: 'header-root',
         rules:[],
+    },{
+        label: '时间',
+        field: 'header-date',
+        rules:[],
+        render: () => <DatePicker style={{ width: 200 }} format="YYYY-MM-DD" onChange={this.handleDateChange} />
     }]
 
     modalForms = [{
@@ -155,11 +157,11 @@ export default class ManageWord extends Component {
         ],
     }]
 
-    onHeaderSearchSubmit = (event,values)=>{
+    onHeaderSearchSubmit = (event)=>{
         event.preventDefault()
         const {validateFields} = this.props.form;
         const ar = this.forms.map((i,k)=> i.field )
-        validateFields(ar,(err,values)=>{
+        validateFields(ar,(err,values) => {
             if (err) { return; }
             for (let key in values) {
                 values[key.split('-')[1]] = values[key]
@@ -167,9 +169,10 @@ export default class ManageWord extends Component {
                     delete values[key]
                 } catch (err){ }
             }
-            const {word,root} = values;
-            this.setState({isCarryHeaderForm: !word && !root , paginationOption: Object.assign(this.state.paginationOption,{current:1}) },(state) => {
-                this.reqTableList(state.paginationOption.current,word,root)
+            let {word,root,date} = values;
+            date = date || ''
+            this.setState({isCarryHeaderForm: !!(word || root || date) , paginationOption: Object.assign(this.state.paginationOption,{current:1}) },(state) => {
+                this.reqTableList(this.state.paginationOption.current,word,root,date)
             })
         })
     }
@@ -255,15 +258,26 @@ export default class ManageWord extends Component {
         })
     }
 
-    paginationChange = (n)=>{
+    getPrefixOfObject = (prefix, obj) => {
+        let nObj = {}
+        Object.keys(obj).forEach((key,i) => {
+            let exceptedKey = key.match(prefix);
+            if (exceptedKey === null) return;
+            exceptedKey = key.slice(~exceptedKey[0].length && exceptedKey[0].length);
+            nObj[exceptedKey] = obj[key]
+        })
+        return nObj;
+    }
+
+    paginationChange = (n) => {
         const {isCarryHeaderForm} = this.state;
         const {getFieldsValue} = this.props.form;
         this.setState({
             paginationOption:Object.assign(this.state.paginationOption,{current:n})
         });
         if (isCarryHeaderForm) {
-            const {word,root} = getFieldsValue();
-            this.reqTableList(n,word,root);
+            const {word,root,date} = this.getPrefixOfObject('header-',getFieldsValue());
+            this.reqTableList(n,word,root,date);
         } else {
             this.reqTableList(n);
         }
@@ -308,7 +322,7 @@ export default class ManageWord extends Component {
     }
 
     render() {
-        const {tableLoading,tableData,paginationOption,visibleModal,curModalOpenText,exampleSentenceList} = this.state;
+        const {tableLoading,tableData,paginationOption,wordNumToday,visibleModal,curModalOpenText,exampleSentenceList} = this.state;
         const {getFieldDecorator} = this.props.form;
         return <React.Fragment>
                 <header className={style.header}>
@@ -321,17 +335,13 @@ export default class ManageWord extends Component {
                                         getFieldDecorator(i.field,{
                                             rules: i.rules,
                                         })(
-                                            <Input size="default" placeholder={`请输入${i.label}`} maxLength="100" />
+                                            i.render ? i.render() : <Input size="default" placeholder={`请输入${i.label}`} maxLength="100" />
                                         )
                                     }
                                 </FormItem>
                             )
                         }
-                        <FormItem label="时间" key="date">
-                            {
-
-                            }
-                        </FormItem>
+                        <FormItem label="今日已添加单词"> {wordNumToday} </FormItem>
                         <FormItem key="submit">
                             <Button htmlType="submit"> 搜索 </Button>
                         </FormItem>

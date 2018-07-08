@@ -1,6 +1,6 @@
 import React from 'react';
 import PromiseRender from './PromiseRender';
-
+import Loading from '../../components/Loading'
 function isPromise(obj) {
   return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
 }
@@ -16,7 +16,7 @@ function isPromise(obj) {
 const checkPermissions = (authority, currentAuthority, target, Exception) => {
 
    if (isPromise(currentAuthority)) {
-       return '认证中'
+       return "asdasd"
    }
 
   // 数组处理

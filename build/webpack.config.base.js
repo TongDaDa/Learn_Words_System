@@ -29,6 +29,17 @@ Object.keys(theme).forEach((variable)=>{
     }catch (e){}
 })
 
+const cssModulesOpotions = {
+    importLoaders: 1,
+    modules:true
+}
+
+// style files regexes
+const cssRegex = /\.css$/;
+const cssModuleRegex = /\.module\.css$/;
+const lessRegex = /\.less$/;
+const lessModuleRegex = /\.module\.less$/;
+
 module.exports = {
     entry:{
         main:path.join(SRC_PATH,"main.js"),
@@ -52,9 +63,13 @@ module.exports = {
             exclude: /node_modules/,
             loader: "babel-loader",
         }, {
-            test: /\.css$/,
-            // exclude: /node_modules/,
+            test: cssRegex,
+            exclude: cssModuleRegex,
             use: ["style-loader", "css-loader"]
+        }, {
+            test: cssModuleRegex,
+            // exclude: /node_modules/,
+            use: ["style-loader", {loader:"css-loader", options:cssModulesOpotions } ]
         }, {
             test: /\.(png|jpe?g|gif|svg)$/,
             exclude: /node_modules/,
@@ -66,15 +81,12 @@ module.exports = {
                 }
             }]
         }, {
-            test:[/\.less/],
+            test: lessModuleRegex,
             use:[
                 { loader: 'style-loader' },
                 {
                     loader: 'css-loader',
-                    // options:{
-                    //     importLoaders: 1,
-                    //     modules:true
-                    // }
+                    options: cssModulesOpotions
                 },
                 {
                     loader:`less-loader`,
@@ -85,21 +97,29 @@ module.exports = {
                 }
             ]
         },{
-            test: /\.scss$/,
-            // exclude: /node_modules/,
-            use: ExtractTextPlugin.extract({
-                use:[{
-                    loader:"css-loader",
+            test: lessRegex,
+            exclude: lessModuleRegex,
+            use:[
+                { loader: 'style-loader' },
+                { loader: 'css-loader' },
+                {
+                    loader:`less-loader`,
                     options:{
-                        importLoaders: 1,
-                        modules:true
+                        sourceMap:true,
+                        modifyVars:theme
                     }
-                },{
-                    loader: 'postcss-loader',
-                }]
-            })
+                }
+            ]
+        },{
+            test: /\.scss$/,
+            use:[
+                { loader: 'style-loader' },
+                {loader:"css-loader", options: cssModulesOpotions},
+                {loader: 'postcss-loader'}
+            ]
         }]
     },
+
     resolve:{
         extensions: ['.js','.jsx',".ts",".tsx",'.html'],
         alias:{
@@ -112,11 +132,6 @@ module.exports = {
         }
     },
     plugins: [
-        new ExtractTextPlugin({
-            filename: "style.css",
-            disable: false,
-            allChunks: true
-        }),
         new CopyWebpackPlugin([
             { from: path.join('..',"static") }
         ]),

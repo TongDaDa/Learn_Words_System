@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, List } from 'antd';
 import classNames from 'classnames';
-import styles from './NoticeList.less';
+import styles from './NoticeList.module.less';
 
 export default function NoticeList({
   data = [], onClick, onClear, title, locale, emptyText, emptyImage,

@@ -1,4 +1,5 @@
 import ReactRendering from 'utils/lazyLoadComponent'
+import bindModel from 'utils/bindModel'
 
 /**
  * @param routeData
@@ -20,6 +21,8 @@ const getChildren = (routeData,quote,route)=>{
     }
 }
 
+const modelCatchMap = []
+
 const Essay = ()=> import(/* webpackChunkName: "manage_essay" */ '../routes/manageEssay');
 const Root = ()=> import(/* webpackChunkName: "manage_essay" */ '../routes/manageRoot');
 const LearnPlan = ()=> import(/* webpackChunkName: "manage_learn_plan" */ '../routes/manageLearnPlan');
@@ -31,21 +34,8 @@ import NotFound404 from "../routes/Exception/404";
 
 export default (app) => {
 
-    const bindModel = (namespace) => (target, key, descriptor) => {
-        const method = descriptor.value;
-        let ret;
-        descriptor.value = (argu=[])=>{
-            const getModel = require(`../model/${namespace}`).default;
-            const model = getModel(namespace)
-            app.model(model)
-            ret = method.apply(target,[namespace,...argu]);
-            return ret;
-        }
-        return descriptor
-    }
-
     class Modules {
-        @bindModel('manageWord')
+        @bindModel('manageWord', modelCatchMap)
         word(namespace){ return import(/* webpackChunkName: "manage_word" */ `../routes/${namespace}`) }
     }
 

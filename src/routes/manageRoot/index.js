@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Table, Menu,message,Modal,Select,Spin } from "antd"
+import { Form, Input, Button, Table, Menu,message,Modal,Select,Spin,Switch } from "antd"
 import {reqRootList,reaSaveRoot,reqDelRoot,reqGetRootModal} from 'services/api'
-import style from './style.scss';
+import style from './style.module.scss';
 import {addRowsKey,omit,splitObject} from 'utils/util'
 import {connect} from 'react-redux'
 
@@ -23,8 +23,10 @@ export default class ManageWord extends Component {
             tableData: [],
             isCarryHeaderForm: false, //当前是否处于搜索条件中
             visibleModal:false,
+            headerSearchCatch: { root: '', pageSize:10, pageNum:1 },
             curModalOpenText:"",
             currentHandleId:null,
+            isShowAddRelationWord:false, //是否显示相关单词
             paginationOption:{
                 current:1,
                 total:0,
@@ -32,22 +34,22 @@ export default class ManageWord extends Component {
         }
     }
 
-    componentDidMount(){
-       // this.reqTableList(1);
-
-    }
+    componentDidMount () { this.reqTableList() }
 
     columns = [
         {
             title: 'root',
             dataIndex: 'root',
             key: 'root',
-            fixed:'left',
-            width:100,
+            fixed:'left'
         },{
-            title: 'translated',
-            dataIndex: 'translated',
-            key: 'translated'
+            title: 'note',
+            dataIndex: 'note',
+            key: 'note'
+        },{
+            title: 'relationWord',
+            dataIndex: 'relationWord',
+            key: 'relationWord'
         },{
             title: 'handle',
             dataIndex: 'handle',
@@ -76,21 +78,18 @@ export default class ManageWord extends Component {
         })
         reqGetRootModal(id).then((res)=>{
             const [left] = splitObject(res.wordModal,["note","example","word","root"])
-            this.props.form.setFieldsValue(this.handleFieldsPrefix(left,false))
+            this.props.form.setFieldsValue(this.handleFieldsPrefix(left, false))
         })
     }
 
-    reqTableList = (pageNum=1) => {
+    reqTableList = () => {
          this.setState({ tableLoading:true });
-         return reqRootList({
-             pageNum,
-             pageSize:10
-         }).then((res)=>{
+         return reqRootList(this.state.headerSearchCatch).then((res)=>{
              console.log(res);
              if (res.errorCode === "0") {
                 this.setState({
-                    tableData: addRowsKey(res.wordList || []),
-                    tableLoading:false
+                    tableData: res.rootWordList || [],
+                    tableLoading: false
                 })
             }
          })
@@ -110,26 +109,20 @@ export default class ManageWord extends Component {
         rules:[],
     }]
 
-    modalForms = [{
-        label: '单词',
-        field: 'modal_word',
-        rules:[],
-    },{
-        label: '词根',
-        field: 'modal_root',
-        rules:[],
-     }]
+    handleSwitchChange = (value) => {
+        this.setState({
+            isShowAddRelationWord:value
+        })
+    }
 
     onHeaderSearchSubmit = (event,values)=>{
         event.preventDefault();
         const {validateFields} = this.props.form;
         validateFields((err,values)=>{
-            if (err) { return; }
-            const {word,root} = values;
-            let isAll = false;
-            if (!word && !root) { isAll = true }
-            this.setState({isCarryHeaderForm:isAll})
-            this.reqTableList(this.state.paginationOption.current,word,root)
+            const {root} = values;
+            this.setState({
+                headerSearchCatch: Object.assign(this.state.headerSearchCatch, {root})
+            },this.reqTableList)
         })
     }
 
@@ -175,12 +168,12 @@ export default class ManageWord extends Component {
         });
     }
 
-    createWord = ()=>{
+    createWord = () => {
         this.props.dispatch({type:'asdasd',word:'inter'})
-        // this.setState({
-        //     curModalOpenText:"添加词汇",
-        //     visibleModal:true,
-        // })
+        this.setState({
+            curModalOpenText:"添加词根",
+            visibleModal:true,
+        })
     }
 
     forms = [{
@@ -201,12 +194,24 @@ export default class ManageWord extends Component {
         label: '翻译',
         field: 'modal_translated',
         rules:[{required:true,message:"请填写"}],
+    },{
+        label: '备注',
+        field: 'modal_note',
+        rules:[]
+    },{
+        label: "添加单词",
+        filed:'modal_relationWord',
+        rule:[],
+        noReactEle:true,
+        render:() => <span>
+            <Switch onChange={this.handleSwitchChange} defaultChecked={false} />
+        </span>
     }]
 
     render() {
         const {tableLoading,tableData,paginationOption,visibleModal,curModalOpenText} = this.state;
         const {getFieldDecorator} = this.props.form;
-        console.log(this.props);
+
         return <React.Fragment>
                 <header className={style.header}>
                     <Button onClick={this.createWord} type="primary"> 添加 </Button>
@@ -233,6 +238,7 @@ export default class ManageWord extends Component {
                     <Table
                         columns={this.columns}
                         loading={tableLoading}
+                        rowKey={(i,key)=>i.key = key}
                         dataSource={tableData}
                         pagination={{
                             ...paginationOption,
@@ -248,21 +254,23 @@ export default class ManageWord extends Component {
                      okText="保存"
                      cancelText="取消"
                 >
-                        <Form layout="inline">
-                            {
-                                this.modalForms.map((formItem,key)=>
-                                    <FormItem label={formItem.label} key={formItem.field}>
-                                        {
-                                            getFieldDecorator(formItem.field,{
-                                                rules: formItem.rules,
-                                            })(
-                                                <Input size="default" placeholder={`请输入${formItem.label}`} maxLength="100" />
-                                            )
-                                        }
-                                    </FormItem>
-                                )
-                            }
-                        </Form>
+                    <Form layout="inline">
+                        {
+                            this.modalForms.map((formItem,key)=> <FormItem label={formItem.label} key={formItem.field}>
+                                    {
+                                        formItem.noReactEle ? formItem.render() : getFieldDecorator(formItem.field,{
+                                            rules: formItem.rules,
+                                        })(
+                                            formItem.render ? formItem.render() : <Input size="default" placeholder={`请输入${formItem.label}`} maxLength="100" />
+                                        )
+                                    }
+                                </FormItem>
+                            )
+                        }
+                        <FormItem>
+                            { this.state.isShowAddRelationWord && getFieldDecorator('relationWord')(<Textarea placeholder="请使用;将每个单词隔开，翻译使用-隔开，例: example-例子; happy-开心" />) }
+                        </FormItem>
+                    </Form>
                 </Modal>
         </React.Fragment>
     }

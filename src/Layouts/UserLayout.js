@@ -7,11 +7,16 @@ const {SubMenu} = Menu;
 const {Sider, Content, Header} = Layout;
 import CatchWrapper from 'utils/CatchWrapper'
 import GlobalHeader from '../components/GlobalHeader';
+import { connect } from 'react-redux';
+import createHistory from 'history/createHashHistory'
+
+const histroy = createHistory();
 
 const getIcon = (icon) => {
     return <Icon type={icon} />;
 };
 
+@connect(state=>({...state}))
 export default class UserLayout extends Component {
 
     static propTypes = {}
@@ -65,9 +70,10 @@ export default class UserLayout extends Component {
             return;
         }
         if (key === 'logout') {
-            this.props.dispatch({
-                type: 'login/logout',
-            });
+            this.props.dispatch({ type: 'login/logout' });
+        }
+        if (key === 'profile') {
+            history.push("/profile")
         }
     }
 
@@ -176,8 +182,6 @@ export default class UserLayout extends Component {
         if (!selectedKeys.length) {
             selectedKeys = [openKeys[openKeys.length - 1]];
         }
-
-        console.log(this.routes);
 
         return <Layout style={{height: '100vh'}}>
             <Sider

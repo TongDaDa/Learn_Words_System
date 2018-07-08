@@ -14,7 +14,7 @@
 
 .userAuthorityContainer{
   display: inline-block;
-  width: 450px;
+  width: 350px;
   padding: 30px;
   background: #fff;
   margin: 0 auto;
@@ -25,14 +25,6 @@
   position: relative;
   transition: .3s all;
   text-align: left;
-  :global(.ant-input){
-    height: 44px;
-    font-size: 16px;
-  }
-  :global(.ant-btn){
-    font-size: 16px;
-    height: 37px;
-  }
 }
 
 .login_wrapper{
@@ -113,5 +105,17 @@
 
 .forgot_confim{
   width: 100%;
+}
+
+.regsiter {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.form {
+  :global(.ant-form-item) {
+    margin-bottom: 15px;
+  }
 }
 

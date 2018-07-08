@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import LoginCom from './login'
 import ForgoPas from './forgotPas'
 import Register from './register'
-import style from './index.scss'
+import style from './index.module.scss'
 import classnames from 'classnames'
 
 export default class UserLayout extends Component {

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Spin} from 'antd';
 import createHistory from 'history/createHashHistory'
 const history = createHistory();
-
+import Loading from '../components/Loading'
 
 /**
  * @param lazyComponent {type React Component}
@@ -16,7 +16,6 @@ export default (importLazyComponent,LoadingComponent,ErrorPage) => (
             this.state = {
                 isLazyLoaded:false,
             }
-
             const LoadingComponentPro = LoadingComponent || Spin;
             this.LoadingComponent = ()=>(<LoadingComponentPro> loading </LoadingComponentPro>)
             const lazyPromiseComponent = importLazyComponent();

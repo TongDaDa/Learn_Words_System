@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Popover, Icon, Tabs, Badge, Spin } from 'antd';
 import classNames from 'classnames';
 import List from './NoticeList';
-import styles from './index.less';
+import styles from './index.module.less';
 
 const { TabPane } = Tabs;
 
