@@ -5,7 +5,9 @@
   "presets": [
     ["env",{
       "targets": {
-        "chrome": 62
+        "chrome": 40,
+        "safari": 9,
+        "ie": 10
       }
     }],
     "stage-0",

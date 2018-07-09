@@ -9,6 +9,7 @@ const STATIC = path.resolve(SRC_PATH,"static");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const pkgPath = path.join(__dirname, '../package.json');
 const pkg = existsSync(pkgPath) ? require(pkgPath) : {};
+var ManifestPlugin = require('webpack-manifest-plugin');
 
 let theme = {};
 if (pkg.theme && typeof(pkg.theme) === 'string') {
@@ -49,7 +50,8 @@ module.exports = {
             "react-router",
             "antd",
             "immutable",
-        ]
+        ],
+        preLoad: path.join(SRC_PATH, "preLoad.js"),
     },
     output: {
         path:path.join(DIST_PATH),
@@ -61,7 +63,7 @@ module.exports = {
         loaders: [{
             test: /\.js|jsx$/,
             exclude: /node_modules/,
-            loader: "babel-loader",
+            loader: "babel-loader"
         }, {
             test: cssRegex,
             exclude: cssModuleRegex,
@@ -143,10 +145,30 @@ module.exports = {
         new HtmlWebpackPlugin({
             name:"index.html",
             template:path.join(SRC_PATH,'index.html'),
+            chunksSortMode: function(a, b) {
+                var order = [
+                    "manifest",
+                    "preLoad",
+                    "vendor",
+                    "main"
+                ];
+                return order.indexOf(a.names[0]) - order.indexOf(b.names[0]);
+            }
         }),
         new webpack.DefinePlugin(Object.assign({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         })),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'manifest',
+            minChunks: Infinity
+        }),
+        // new ManifestPlugin({
+        //     fileName: 'my-manifest.json',
+        //     basePath: '/app/',
+        //     seed: {
+        //         name: 'My Manifest'
+        //     }
+        // })
     ]
 };
 

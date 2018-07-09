@@ -51,7 +51,7 @@ export default class Login extends Component {
 
         return <React.Fragment>
                 <Form onSubmit={this.handleSubmit} className={style.form}>
-                    <FormItem label="账号" {...wrpperCols}>
+                    <FormItem label="账号">
                         {getFieldDecorator('account', {
                             rules: [
                                 {required: true, message: '请输入用户名'},
@@ -61,7 +61,7 @@ export default class Login extends Component {
                             <Input prefix={<Icon type="user" style={{fontSize: 16}}/>} placeholder="用户名"/>
                         )}
                     </FormItem>
-                    <FormItem label="密码" {...wrpperCols}>
+                    <FormItem label="密码">
                         {getFieldDecorator('password', {
                             rules: [{required: true, pattern: password, message: '密码格式错误'}],
                         })(

@@ -16,7 +16,7 @@ function isPromise(obj) {
 const checkPermissions = (authority, currentAuthority, target, Exception) => {
 
    if (isPromise(currentAuthority)) {
-       return "asdasd"
+       return ""
    }
 
   // 数组处理
