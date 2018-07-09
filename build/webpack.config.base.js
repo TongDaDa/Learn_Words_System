@@ -48,8 +48,6 @@ module.exports = {
             "react",
             "react-dom",
             "react-router",
-            "antd",
-            "immutable",
         ],
         preLoad: path.join(SRC_PATH, "preLoad.js"),
     },
@@ -134,9 +132,6 @@ module.exports = {
         }
     },
     plugins: [
-        new CopyWebpackPlugin([
-            { from: path.join('..',"static") }
-        ]),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
             name: ["main","vendor"], // vendor libs + extracted manifest
@@ -157,11 +152,7 @@ module.exports = {
         }),
         new webpack.DefinePlugin(Object.assign({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-        })),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'manifest',
-            minChunks: Infinity
-        }),
+        }))
         // new ManifestPlugin({
         //     fileName: 'my-manifest.json',
         //     basePath: '/app/',
