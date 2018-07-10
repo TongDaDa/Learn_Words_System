@@ -162,5 +162,3 @@ module.exports = {
         // })
     ]
 };
-
-console.log("完成");
