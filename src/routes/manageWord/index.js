@@ -211,6 +211,7 @@ export default class ManageWord extends Component {
         }
     }
 
+    //sdf
     handleModalOk = () => {
         this.props.form.validateFields(this.modalFields,(err,values)=>{
             if (err) return;
