@@ -25,6 +25,7 @@ export default class ManageWord extends Component {
             tableData: [],
             isCarryHeaderForm: false, //当前是否处于搜索条件中
             visibleModal:false,
+            currentHeaderSearch:{pageNum:1,pageSize:10, word:"",root:"", date:''},
             wordNumToday:0,
             curModalOpenText:"",
             currentHandleId:null,
@@ -36,7 +37,7 @@ export default class ManageWord extends Component {
         }
     }
 
-    componentDidMount(){this.reqTableList(1); }
+    componentDidMount(){ this.reqTableList(); }
 
     columns = [
         {
@@ -77,7 +78,12 @@ export default class ManageWord extends Component {
         reqDelword(id).then((res)=>{
             if (res.errorCode === "0") {
                 message.success("删除成功")
-                this.reqTableList(this.state.paginationOption.current)
+                const {pagationOptions} = this.state;
+                const calaTotal = pagationOptions.total - 1
+                this.setState({
+                    pagationOptions: Object.assign(pagationOptions,{ current: Math.ceil(calaTotal/pagationOptions.pageSize) })
+                })
+                this.reqTableList();
             }
         })
     }
@@ -102,14 +108,10 @@ export default class ManageWord extends Component {
 
     }
 
-    reqTableList = (pageNum=1,word="",root="", date = '') => {
+    reqTableList = () => {
          this.setState({tableLoading: true});
-         date = date && date.format("YYYY-MM-DD")
-         return reqWordList({
-             pageNum,
-             pageSize:10,
-             word,root,date
-         }).then((res)=>{
+         const params = this.state.currentHeaderSearch;
+         return reqWordList({...params,date: params.date && params.date.format("YYYY-MM-DD")}).then((res) => {
              if (res.errorCode === "0") {
                 this.setState({
                     wordNumToday: res.wordNumToday,
@@ -170,10 +172,9 @@ export default class ManageWord extends Component {
                 } catch (err){ }
             }
             let {word,root,date} = values;
-            date = date || ''
-            this.setState({isCarryHeaderForm: !!(word || root || date) , paginationOption: Object.assign(this.state.paginationOption,{current:1}) },(state) => {
-                this.reqTableList(this.state.paginationOption.current,word,root,date)
-            })
+            this.setState({
+                currentHeaderSearch: Object.assign(this.state.currentHeaderSearch, {pageNum:1, word,root,date}),
+                paginationOption: Object.assign(this.state.paginationOption,{current:1}) }, this.reqTableList)
         })
     }
 
@@ -210,10 +211,10 @@ export default class ManageWord extends Component {
         }
     }
 
-    handleModalOk = ()=>{
+    handleModalOk = () => {
         this.props.form.validateFields(this.modalFields,(err,values)=>{
             if (err) return;
-            const {currentHandleId,exampleSentenceList,curModalOpenText} = this.state;
+            const {currentHandleId,exampleSentenceList,curModalOpenText,pagationOptions} = this.state;
             const IS_EDIT = curModalOpenText === "编辑词汇"
             let params = this.handleFieldsPrefix(values, true);
             const deepFormatJudge = (sentence) => {
@@ -233,16 +234,13 @@ export default class ManageWord extends Component {
                 if (!currentHandleId) { message.error("编辑失败，请重试"); return; }
                 params.id = this.state.currentHandleId;
             }
-            reqSaveWord(params).then((res)=>{
+            reqSaveWord(params).then((res) => {
                 if (res.errorCode === "0") {
                     message.success("保存成功");
-                    if (IS_EDIT) {
-                        const lastPage = Math.ceil(this.state.paginationOption.total / 10);
-                        this.setState({
-                            paginationOption: Object.assign(this.state.paginationOption, {current: lastPage})
-                        })
-                        this.reqTableList(...this.searchHeaderForm(lastPage).filter(Number))
-                    }
+                    const calaTotal = pagationOptions.total + 1
+                    this.setState({
+                        pagationOptions: Object.assign(pagationOptions,{ current: Math.ceil(calaTotal/pagationOptions.pageSize) })
+                    })
                     this.reqTableList(...this.searchHeaderForm().filter(Number))
                     this.clearModal();
                 }
@@ -270,17 +268,9 @@ export default class ManageWord extends Component {
     }
 
     paginationChange = (n) => {
-        const {isCarryHeaderForm} = this.state;
-        const {getFieldsValue} = this.props.form;
         this.setState({
             paginationOption:Object.assign(this.state.paginationOption,{current:n})
-        });
-        if (isCarryHeaderForm) {
-            const {word,root,date} = this.getPrefixOfObject('header-',getFieldsValue());
-            this.reqTableList(n,word,root,date);
-        } else {
-            this.reqTableList(n);
-        }
+        },this.reqTableList);
     }
 
     /**
@@ -291,10 +281,11 @@ export default class ManageWord extends Component {
     searchHeaderForm = (margeSource=[]) => {
         let arr = [this.state.paginationOption.current];
         if (this.state.isCarryHeaderForm) {
-            arr.concat(["",""])
-        } else {
+            debugger;
             const fields = this.props.form.getFieldsValue();
             arr.push(...this.headerForm.map((key)=> fields[key] ))
+        } else {
+            arr.concat(["",""])
         }
         for (let i = 0; i < margeSource.length; i++) { arr[i] = margeSource[i] }
         return arr
@@ -334,6 +325,7 @@ export default class ManageWord extends Component {
                                     {
                                         getFieldDecorator(i.field,{
                                             rules: i.rules,
+                                            initialValue: ""
                                         })(
                                             i.render ? i.render() : <Input size="default" placeholder={`请输入${i.label}`} maxLength="100" />
                                         )
