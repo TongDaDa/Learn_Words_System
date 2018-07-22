@@ -7,7 +7,6 @@ import style from './index.module.scss'
 import classnames from 'classnames'
 
 export default class UserLayout extends Component {
-
     static propTypes = {}
     constructor(props) {
         super(props);
