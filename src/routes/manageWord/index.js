@@ -67,7 +67,7 @@ export default class ManageWord extends Component {
             title: 'handle',
             dataIndex: 'handle',
             key: 'handle',
-            render:(i,record)=> <span>    
+            render:(i,record)=> <span>
                 <a onClick={()=>{this.edit(record.id)}}> 编辑 </a>
                 <a onClick={()=>{this.del(record.id)}}> 删除 </a>
             </span>
@@ -78,10 +78,10 @@ export default class ManageWord extends Component {
         reqDelword(id).then((res)=>{
             if (res.errorCode === "0") {
                 message.success("删除成功")
-                const {pagationOptions} = this.state;
-                const calaTotal = pagationOptions.total - 1
+                const {paginationOption} = this.state;
+                const calaTotal = paginationOption.total - 1
                 this.setState({
-                    pagationOptions: Object.assign(pagationOptions,{ current: Math.ceil(calaTotal/pagationOptions.pageSize) })
+                    paginationOption: Object.assign(paginationOption,{ current: Math.ceil(calaTotal/paginationOption.pageSize) })
                 })
                 this.reqTableList();
             }
@@ -110,7 +110,7 @@ export default class ManageWord extends Component {
 
     reqTableList = () => {
          this.setState({tableLoading: true});
-         const params = this.state.currentHeaderSearch;
+         const params = this.state.paginationOption;
          return reqWordList({...params,date: params.date && params.date.format("YYYY-MM-DD")}).then((res) => {
              if (res.errorCode === "0") {
                 this.setState({
@@ -201,7 +201,7 @@ export default class ManageWord extends Component {
                 left[field.replace("modal_","")]= left[field];
                 try { delete left[field]; } catch (err) { }
             })
-            return left;            
+            return left;
         } else {
             Object.keys(values).forEach(field=>{
                 values["modal_"+field] = values[field];
@@ -215,7 +215,7 @@ export default class ManageWord extends Component {
     handleModalOk = () => {
         this.props.form.validateFields(this.modalFields,(err,values)=>{
             if (err) return;
-            const {currentHandleId,exampleSentenceList,curModalOpenText,pagationOptions} = this.state;
+            const {currentHandleId,exampleSentenceList,curModalOpenText,paginationOption} = this.state;
             const IS_EDIT = curModalOpenText === "编辑词汇"
             let params = this.handleFieldsPrefix(values, true);
             const deepFormatJudge = (sentence) => {
@@ -238,9 +238,9 @@ export default class ManageWord extends Component {
             reqSaveWord(params).then((res) => {
                 if (res.errorCode === "0") {
                     message.success("保存成功");
-                    const calaTotal = pagationOptions.total + 1
+                    const calaTotal = paginationOption.total + 1
                     this.setState({
-                        pagationOptions: Object.assign(pagationOptions,{ current: Math.ceil(calaTotal/pagationOptions.pageSize) })
+                        paginationOption: Object.assign(paginationOption,{ current: Math.ceil(calaTotal/paginationOption.pageSize) })
                     })
                     this.reqTableList(...this.searchHeaderForm().filter(Number))
                     this.clearModal();
@@ -351,7 +351,7 @@ export default class ManageWord extends Component {
                         }}
                     />
                 </section>
-        
+
                 <Modal
                      title={curModalOpenText}
                      visible={visibleModal}
