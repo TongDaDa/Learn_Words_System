@@ -110,8 +110,8 @@ export default class ManageWord extends Component {
 
     reqTableList = () => {
          this.setState({tableLoading: true});
-         const params = this.state.paginationOption;
-         return reqWordList({...params,date: params.date && params.date.format("YYYY-MM-DD")}).then((res) => {
+         const params = this.state.currentHeaderSearch;
+         return reqWordList({...params, date: params.date && params.date.format("YYYY-MM-DD")}).then((res) => {
              if (res.errorCode === "0") {
                 this.setState({
                     wordNumToday: res.wordNumToday,
@@ -172,9 +172,13 @@ export default class ManageWord extends Component {
                 } catch (err){ }
             }
             let {word,root,date} = values;
+
+            date = date || '';
+
             this.setState({
                 currentHeaderSearch: Object.assign(this.state.currentHeaderSearch, {pageNum:1, word,root,date}),
-                paginationOption: Object.assign(this.state.paginationOption,{current:1}) }, this.reqTableList)
+                paginationOption: Object.assign(this.state.paginationOption, {current:1})
+            }, this.reqTableList)
         })
     }
 
@@ -211,7 +215,6 @@ export default class ManageWord extends Component {
         }
     }
 
-    //sdf
     handleModalOk = () => {
         this.props.form.validateFields(this.modalFields,(err,values)=>{
             if (err) return;
@@ -270,7 +273,8 @@ export default class ManageWord extends Component {
 
     paginationChange = (n) => {
         this.setState({
-            paginationOption:Object.assign(this.state.paginationOption,{current:n})
+            currentHeaderSearch: Object.assign(this.state.currentHeaderSearch, {pageNum: n}),
+            paginationOption: Object.assign(this.state.paginationOption,{current:n})
         },this.reqTableList);
     }
 
