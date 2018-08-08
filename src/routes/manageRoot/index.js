@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Table, Menu,message,Modal,Select,Spin,Switch } from "antd"
-import {reqRootList,reaSaveRoot,reqDelRoot,reqGetRootModal} from 'services/api'
+import {reqRootList,reaSaveRoot,reqDelRoot,reqGetRootModal, reqDelroot, reqSaveRoot} from 'services/api'
 import style from './style.module.scss';
 import {addRowsKey,omit,splitObject} from 'utils/util'
 import {connect} from 'react-redux'
@@ -54,7 +54,7 @@ export default class ManageWord extends Component {
             title: 'handle',
             dataIndex: 'handle',
             key: 'handle',
-            render:(i,record)=> <span>    
+            render:(i,record)=> <span>
                 <a onClick={()=>{this.edit(record.id)}}> 编辑 </a>
                 <a onClick={()=>{this.del(record.id)}}> 删除 </a>
             </span>
@@ -62,7 +62,7 @@ export default class ManageWord extends Component {
     ]
 
     del = (id)=>{
-        reqDelword(id).then((res)=>{
+        reqDelroot(id).then((res) => {
             if (res.errorCode === "0") {
                 message.success("删除成功")
                 this.reqTableList(this.state.paginationOption.current)
@@ -140,7 +140,7 @@ export default class ManageWord extends Component {
             Object.keys(left).forEach(field=>{
                 left[field.replace("modal_","")]=left[field]; delete left.field;
             })
-            return left;            
+            return left;
         } else {
             Object.keys(values).forEach(field=>{
                 values["modal_"+field] = values[field]; delete values.field;
@@ -154,14 +154,13 @@ export default class ManageWord extends Component {
             if (err) return;
             const {currentHandleId,curModalOpenText} = this.state;
             let params = this.handleFieldsPrefix(values,true);
-            if (curModalOpenText== "编辑词汇") {
-                if (!currentHandleId) { message.error("编辑失败，请重试"); return; }
-                params.id = this.state.currentHandleId;
+            if (curModalOpenText === "编辑词汇") {
+                !currentHandleId && message.error("编辑失败，请重试"); return;
+                params.id = currentHandleId;
             }
-            reqSaveWord(params).then((res)=>{
+            return reqSaveRoot(params).then((res) => {
                 if (res.errorCode === "0") {
                     message.success("保存成功");
-                    this.reqTableList(1,"","")
                     this.clearModal();
                 }
             })
@@ -199,18 +198,16 @@ export default class ManageWord extends Component {
         field: 'modal_note',
         rules:[]
     },{
-        label: "添加单词",
-        filed:'modal_relationWord',
+        label: '添加单词',
+        filed: 'modal_relationWord',
         rule:[],
         noReactEle:true,
-        render:() => <span>
-            <Switch onChange={this.handleSwitchChange} defaultChecked={false} />
-        </span>
+        render:() => <Switch defaultChecked={false} />
     }]
 
     render() {
         const {tableLoading,tableData,paginationOption,visibleModal,curModalOpenText} = this.state;
-        const {getFieldDecorator} = this.props.form;
+        const {getFieldDecorator, getFieldValue : DD} = this.props.form;
 
         return <React.Fragment>
                 <header className={style.header}>
@@ -268,7 +265,7 @@ export default class ManageWord extends Component {
                             )
                         }
                         <FormItem>
-                            { this.state.isShowAddRelationWord && getFieldDecorator('relationWord')(<Textarea placeholder="请使用;将每个单词隔开，翻译使用-隔开，例: example-例子; happy-开心" />) }
+                            {  DD("modal_relationWord") && getFieldDecorator('relationWord')( <Textarea placeholder="请使用;将每个单词隔开，翻译使用-隔开，例: example-例子; happy-开心" />) }
                         </FormItem>
                     </Form>
                 </Modal>

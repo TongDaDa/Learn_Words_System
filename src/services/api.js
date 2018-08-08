@@ -56,9 +56,23 @@ export async function reqDelRoot(params){  /* 删除词根 */
     })
 }
 
-export async function reqGetRootModal(params){  /* 请求单词列表 */
-    return request('/root/get',{
-        method: 'GET',
-        body:{ ...params}
+export async function reqGetRootModal(id){  /* 请求单词列表 */
+    return request(`/root/get/${id}`,{
+        method: 'GET'
     })
 }
+
+export async function reqSaveRoot(params) {  /* 保存词根 */
+    return request('/root/save',{
+        method: 'POST',
+        body:{ ...params }
+    })
+}
+
+export async function reqDelroot(id) {  /* 保存词根 */
+    return request(`/root/del/${id}`,{
+        method: 'DELETE'
+    })
+}
+
+

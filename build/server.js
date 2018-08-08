@@ -6,7 +6,7 @@ const path = require('path')
 
 let compiler = webpack(webpackConfig);
 
-let server = new WebpackDevServer(compiler, {
+let server = new WebddpackDevServer(compiler, {
     contentBase:path.join(__dirname, "..",'static'),
     publicPath: "/",
     proxy: {
