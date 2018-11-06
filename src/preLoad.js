@@ -1,6 +1,7 @@
 import {b64EncodeUnicode} from 'utils/toBase64'
 
 (function test() {
+
     const scripts = document.getElementsByTagName("SCRIPT");
     const STORAGE_KEY = "CATCH_MANIFEST"
     const currentManifest = getCurrentManifest();
@@ -11,15 +12,63 @@ import {b64EncodeUnicode} from 'utils/toBase64'
 
     function updateView() {
         const root = document.getElementById("root")
-        const div = document.createElement("DIV")
+        const div = document.createElement("DIV");
+        const styleEle = document.createElement("STYLE");
+        
+        const CssAnimationQL = `
+         @keyframes animation6 {
+    20%{-webkit-transform:scale(1.2, 0.8);}
+    45%{-webkit-transform:translate(0,-180%);}
+    80%{-webkit-transform:translate(0,-200%);}
+    85%{-webkit-transform:translate(0,-180%);}
+  }
+  @keyframes animation6-shadow{
+    30%{-webkit-transform:scale(1.2);}
+    55%{-webkit-transform:scale(0.5);opacity:0.5;}
+    90%{-webkit-transform:scale(0.4);opacity:0.4;}
+  }
+  .football .ball{
+    position: relative;
+    z-index: 2;
+    width: 58px;
+    height: 57px;
+    margin: 0 auto -3%;
+    background: url(../../assets/img/icon_ball.png) no-repeat center 0;
+    background-size: contain;
+    -webkit-animation: animation6 1s ease-in-out infinite;
+    animation: animation6 1s ease-in-out infinite;
+    -webkit-animation-delay: -0.7s;
+    animation-delay: -0.7s;
+  }
+  .football.allScreen {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,20%);
+  }
+  .football .shadow {
+    position: relative;
+    z-index: 1;
+    width: 58px;
+    height: 25px;
+    margin: auto;
+    border-radius: 50%;
+    background-color: #707070;
+    -webkit-animation: animation6-shadow 1s infinite;
+    animation: animation6-shadow 1s infinite;
+    -webkit-animation-delay: -0.7s;
+    animation-delay: -0.7s;
+  }`
         const LoadingQL = `
-           <div class="football allScreen">
+            <div class="football allScreen">
                 <div class="ball"></div>
                 <div class="shadow"></div>
                 <p>Now Loading ...</p>
             </div>
         `
         div.innerHTML = LoadingQL;
+        styleEle.innerText = CssAnimationQL;
+        document.head.insertBefore(styleEle)
         root.appendChild(div)
     }
 

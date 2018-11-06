@@ -15,9 +15,9 @@ export default class Loading extends Component {
     render() {
         const { isAllScreen } = this.props;
         return <React.Fragment>
-            <div className={classnames({[style.football]:true,[style.allScreen]: isAllScreen})}>
-                <div className={style.ball}></div>
-                <div className={style.shadow}></div>
+            <div className={classnames({[style.football]:true,["allScreen"]: isAllScreen})}>
+                <div className="ball"></div>
+                <div className="football"></div>
                 <p>Now Loading ...</p>
             </div>
         </React.Fragment>

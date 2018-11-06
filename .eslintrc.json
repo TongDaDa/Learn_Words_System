@@ -1,14 +1,1 @@
-{
-  "extends": "airbnb",
-  "plugins": ["compat"],
-  "env": {},
-  "rules": {},
-  "parserOptions": {
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true
-    }
-  },
-  "settings": {
-    "polyfills": ["fetch", "promises"]
-  }
-}
+{}

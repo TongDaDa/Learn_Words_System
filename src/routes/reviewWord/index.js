@@ -92,7 +92,7 @@ export default class ReviewWord extends Component {
      * 生成今日复习词汇音频文件
      */
     downLoadWordAudio = () => {
-        
+        reqAudioUrl({type: ""}).then(()=>{})
     }
     
     forms = [{
@@ -211,7 +211,7 @@ export default class ReviewWord extends Component {
                          }
                         </Col>
                         <Col>
-                            <FormItem key="submit" >
+                            <FormItem key="submit" style={{marginRight:0}}>
                                 <Button.Group>
                                     <Button htmlType="submit"> 搜索 </Button>
                                     <Button onClick={this.reqTableList}> 刷新 </Button>
@@ -220,6 +220,7 @@ export default class ReviewWord extends Component {
                             </FormItem>
                         </Col>
                     </Row>
+                    <Row style={{textAlign:"right", marginTop:20}}> 今日已添加词汇 0 个 </Row>
                 </Form>
             </header>
 
