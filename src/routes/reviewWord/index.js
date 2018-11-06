@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Table, Menu,message,Modal,Select,Spin,Switch,Row,Col} from "antd"
-import {reqRootList,reaSaveRoot,reqDelRoot,reqGetRootModal, reqDelroot, reqReviewWordsList} from 'services/api'
+import {reqRootList,reaSaveRoot,reqDelRoot,reqGetRootModal, reqDelroot, reqReviewWordsList, reqAudioUrl} from 'services/api'
 import style from './style.module.scss';
 import {addRowsKey,omit,splitObject} from 'utils/util'
 import {connect} from 'react-redux'
@@ -88,6 +88,13 @@ export default class ReviewWord extends Component {
         })
     }
 
+    /**
+     * 生成今日复习词汇音频文件
+     */
+    downLoadWordAudio = () => {
+        
+    }
+    
     forms = [{
         label: '词根',
         field: 'root',
@@ -161,7 +168,7 @@ export default class ReviewWord extends Component {
     }
 
     remember = () => {
-        this.props.dispatch({type:'asdasd',word:'inter'})
+        this.props.dispatch({type:'asdasd', word:'inter'})
         this.setState({
             curModalOpenText:"添加词根",
             visibleModal:true,
@@ -208,6 +215,7 @@ export default class ReviewWord extends Component {
                                 <Button.Group>
                                     <Button htmlType="submit"> 搜索 </Button>
                                     <Button onClick={this.reqTableList}> 刷新 </Button>
+                                    <Button onClick={this.downLoadWordAudio}> 下载今日复习词汇音频 </Button>
                                 </Button.Group>
                             </FormItem>
                         </Col>

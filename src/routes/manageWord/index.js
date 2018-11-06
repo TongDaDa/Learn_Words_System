@@ -337,11 +337,12 @@ export default class ManageWord extends Component {
                     <Button onClick={this.createWord} type="primary"> 添加 </Button>
                     <Form onSubmit={this.onHeaderSearchSubmit} className='tabContentForm' layout="inline">
                         {
-                            this.forms.map((i,k)=>
+                            this.forms.map((i,k) =>
                                 <FormItem label={i.label} key={i.field}>
                                     {
                                         getFieldDecorator(i.field, {
-                                            rules: i.rules
+                                            rules: i.rules,
+                                            initialValue: i.field !== "header-date" ? "" : null
                                         })(
                                             i.render ? i.render() : <Input size="default" placeholder={`请输入${i.label}`} maxLength="100" />
                                         )

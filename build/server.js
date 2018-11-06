@@ -11,7 +11,7 @@ let server = new WebpackDevServer(compiler, {
     publicPath: "/",
     proxy: {
         '/api': {
-            target:REQUEST_LOCAL_URL,
+            target: REQUEST_PROD_URL,
             pathRewrite: {'^/api' : ''}
         },
     },
