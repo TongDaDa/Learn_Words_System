@@ -26,6 +26,8 @@ const modelCatchMap = []
 const Essay = ()=> import(/* webpackChunkName: "manage_essay" */ '../routes/manageEssay');
 const Root = ()=> import(/* webpackChunkName: "manage_essay" */ '../routes/manageRoot');
 const LearnPlan = ()=> import(/* webpackChunkName: "manage_learn_plan" */ '../routes/manageLearnPlan');
+const ReveiWord = ()=> import(/* webpackChunkName 'manage_review' */ '../route/manageReviewWord')
+
 
 import NotFound500 from "../routes/Exception/500";
 import NotFound403 from "../routes/Exception/403";
@@ -35,19 +37,28 @@ import NotFound404 from "../routes/Exception/404";
 export default (app) => {
 
     class Modules {
+
         @bindModel('manageWord', modelCatchMap)
-        word(namespace){ return import(/* webpackChunkName: "manage_word" */ `../routes/${namespace}`) }
+        wordComponent(namespace){ return import(/* webpackChunkName: "manage_word" */ `../routes/${namespace}`) }
+
+        @bindModel('reviewWord', modelCatchMap)
+        reviewWordComponent(namespace) { return import(/* webpackChunkName: "reviewWord" */ `../routes/${namespace}`) }
     }
 
     const modules = new Modules();
 
     const routesSource = [
         {name:"基础学习", path:'/user/base', children: [
-            {name:"单词管理",component:ReactRendering(modules.word), path:"manage_word",isExact:true},
+            {name:"单词管理",component:ReactRendering(modules.wordComponent), path:"manage_word",isExact:true},
             {name:"文章管理",component:ReactRendering(Essay),path:"essay",isExact:true},
             {name:"词根管理",component:ReactRendering(Root),path:"root",isExact:true},
             {name:"单词管理",component:ReactRendering(modules.word),path:"manage_word",isExact:true},
             {name:"学习计划管理",component:ReactRendering(LearnPlan),path:"learnPlan",isExact:true},
+            {name:"学习计划管理",component:ReactRendering(LearnPlan),path:"learnPlan",isExact:true},
+            {name:"学习计划管理",component:ReactRendering(LearnPlan),path:"manage_reviewWord",isExact:true}]
+        },
+        { name:"复习计划", path:"/user/plan", children:[
+            {name:"单词复习",component:ReactRendering(modules.reviewWordComponent), path:"manage_reviewWord", isExact:true},
         ]},
         {name: '异常页面-500', component: NotFound500, path:"/exception/500",isExact:true},
         {name: '异常页面-403', component: NotFound403, path:"/exception/403", isExact:true},

@@ -1,3 +1,14 @@
-/**
- * Created by liutong on 2018/11/5.
- */
+export default namespace => ({
+    namespace,
+    state: {
+        currentState:'4'
+    },
+    effects: {
+        *yy (){}
+    },
+    reducers: {
+        UPDATE(state) {
+            return state + 1;
+        },
+    },
+})

@@ -71,8 +71,21 @@ export async function reqSaveRoot(params) {  /* 保存词根 */
 
 export async function reqDelroot(id) {  /* 保存词根 */
     return request(`/root/del/${id}`,{
-        method: 'DELETE'
+        method: 'DELETE',
     })
 }
 
+/******************** reviewWord ******************/
+export async function reqAddingForgotWord(params){
+    return request(`/forgot/add`,{
+        method: 'POST',
+        body: params
+    })
+}
 
+export async function reqReviewWordsList(params){
+    return request(`/forgot/list`,{
+        method: 'POST',
+        body: params
+    })
+}

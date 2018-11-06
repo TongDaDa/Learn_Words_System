@@ -9,7 +9,7 @@ import {connect} from 'react-redux'
 const FormItem = Form.Item;
 const Textarea = Input.TextArea;
 
-@connect(state=>({...state,name:'liutong'}))
+@connect(state=>({...state}))
 @Form.create()
 export default class ManageWord extends Component {
 

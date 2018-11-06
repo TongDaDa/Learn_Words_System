@@ -1,3 +1,6 @@
-/**
- * Created by liutong on 2018/11/1.
- */
+// @flow
+function square(n) {
+    return n * n; // Error!
+}
+
+square(2);

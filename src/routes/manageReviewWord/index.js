@@ -7,10 +7,14 @@ export default class  extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {};
     }
 
+    componentDidMount(){}
+
     render() {
-        return <React.Fragment></React.Fragment>
+        return <React.Fragment>
+
+        </React.Fragment>
     }
 }

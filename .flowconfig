@@ -1,0 +1,15 @@
+[ignore]
+.*/__tests__/.*
+.*/src/\(foo\|bar\)/.*
+.*\.ignore\.js
+.*/node_modules/.*
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+
+[strict]

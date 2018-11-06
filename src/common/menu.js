@@ -21,7 +21,7 @@
 },{
     name: "复习计划",
     icon: 'dashboard',
-    path: '/plan',
+    path: '/user/plan',
     children: [{
         name: '文章阅读',
         path: 'read_essay',
@@ -29,8 +29,8 @@
         name: '复习计划管理',
         path: 'learnPlan',
     },{
-        name: '词根',
-        path: 'root',
+        name: '单词复习',
+        path: 'manage_reviewWord',
     },{
         name: '单词',
         path: 'workplace'

@@ -3,6 +3,7 @@
     "babel-plugin-transform-decorators-legacy"
   ],
   "presets": [
+    "flow",
     ["env",{
       "targets": {
         "chrome": 40,

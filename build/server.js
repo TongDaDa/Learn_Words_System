@@ -1,4 +1,4 @@
-const {REQUEST_PROD_URL,REQUEST_LOCAL_URL} = require('../src/config')
+const { REQUEST_PROD_URL, REQUEST_LOCAL_URL } = require('../src/config');
 const webpackConfig = require("./webpack.config.dev.js");
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
@@ -6,12 +6,12 @@ const path = require('path')
 
 let compiler = webpack(webpackConfig);
 
-let server = new WebddpackDevServer(compiler, {
-    contentBase:path.join(__dirname, "..",'static'),
+let server = new WebpackDevServer(compiler, {
+    contentBase: path.join(__dirname, "..",'static'),
     publicPath: "/",
     proxy: {
         '/api': {
-            target:REQUEST_PROD_URL,
+            target:REQUEST_LOCAL_URL,
             pathRewrite: {'^/api' : ''}
         },
     },

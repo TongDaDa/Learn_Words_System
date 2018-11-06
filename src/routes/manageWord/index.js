@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Table, Menu, message,Modal,Icon, DatePicker } from "antd"
-import {reqWordList,reqSaveWord,reqDelword,reqGetWordModal} from 'services/api'
+import {reqWordList,reqSaveWord,reqDelword,reqGetWordModal,reqAddingForgotWord} from 'services/api'
 import style from './style.module.scss';
 import moment from "moment";
 import {addRowsKey,omit,splitObject,mapStateMiddleWare} from 'utils/util'
@@ -14,7 +14,7 @@ const Textarea = Input.TextArea;
 @Form.create()
 export default class ManageWord extends Component {
 
-    static propTypes = {};
+    static PropTypes = {};
 
     constructor(props) {
         super(props);
@@ -67,10 +67,11 @@ export default class ManageWord extends Component {
             title: 'handle',
             dataIndex: 'handle',
             key: 'handle',
-            render:(i,record)=> <span>
-                <a onClick={()=>{this.edit(record.id)}}> 编辑 </a>
-                <a onClick={()=>{this.del(record.id)}}> 删除 </a>
-            </span>
+            render:(i,record)=> <Button.Group>
+                <Button onClick={()=>{this.edit(record.id)}}> 编辑 </Button>
+                <Button onClick={()=>{this.forgot(record.id, record.word)}}> 忘记了? </Button>
+                <Button onClick={()=>{this.del(record.id)}}> 删除 </Button>
+            </Button.Group>
         }
     ]
 
@@ -108,6 +109,17 @@ export default class ManageWord extends Component {
 
     }
 
+    forgot = (wordId, word) => {
+        reqAddingForgotWord({wordId,word}).then(res => {
+            console.log(res);
+            if (res.errorCode === "0") {
+                message.success("已经添加到复习列表")
+            } else{
+                message.error("添加失败")
+            }
+        })
+    }
+
     reqTableList = () => {
          this.setState({tableLoading: true});
          const params = this.state.currentHeaderSearch;
@@ -135,7 +147,7 @@ export default class ManageWord extends Component {
         label: '时间',
         field: 'header-date',
         rules:[],
-        render: () => <DatePicker style={{ width: 200 }} format="YYYY-MM-DD" onChange={this.handleDateChange} />
+        render: () => <DatePicker style={{ width: 200 }} fromat="YYYY-MM-DD"  onChange={this.handleDateChange} />
     }]
 
     modalForms = [{
@@ -328,9 +340,8 @@ export default class ManageWord extends Component {
                             this.forms.map((i,k)=>
                                 <FormItem label={i.label} key={i.field}>
                                     {
-                                        getFieldDecorator(i.field,{
-                                            rules: i.rules,
-                                            initialValue: ""
+                                        getFieldDecorator(i.field, {
+                                            rules: i.rules
                                         })(
                                             i.render ? i.render() : <Input size="default" placeholder={`请输入${i.label}`} maxLength="100" />
                                         )

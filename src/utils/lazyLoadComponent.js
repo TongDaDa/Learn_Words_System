@@ -17,7 +17,7 @@ export default (importLazyComponent,LoadingComponent,ErrorPage) => (
                 isLazyLoaded:false,
             }
             const LoadingComponentPro = LoadingComponent || Spin;
-            this.LoadingComponent = ()=>(<LoadingComponentPro> loading </LoadingComponentPro>)
+            this.LoadingComponent = ()=>(<LoadingComponentPro> 加载中 </LoadingComponentPro>)
             const lazyPromiseComponent = importLazyComponent();
 
             lazyPromiseComponent.then((e) => {
